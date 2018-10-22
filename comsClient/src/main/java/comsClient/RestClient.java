@@ -22,16 +22,14 @@ public class RestClient
 		HttpHeaders headers = new HttpHeaders();
 		List<MediaType> acceptableMediaTypes = new ArrayList<>();
 		acceptableMediaTypes.add(MediaType.IMAGE_JPEG);
-		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+		acceptableMediaTypes.add(MediaType.APPLICATION_XML);
 		headers.setAccept(acceptableMediaTypes );
 		
 		HttpEntity<HttpHeaders> requestEntity = new HttpEntity<HttpHeaders>(headers);
 		try
 		{
-//			HttpEntity<String> response = template.exchange("http://localhost:8080/comsWS/contact/80b3f572-b9d1-4dc3-bf62-6216ec973630--knlkin",
-//													HttpMethod.GET, requestEntity, String.class);
-			HttpEntity<String> response = template.exchange("http://localhost:8080/comsWS/contacts",
-					HttpMethod.GET, requestEntity, String.class);
+			HttpEntity<String> response = template.exchange("http://localhost:8080/comsWS/contact/80b3f572-b9d1-4dc3-bf62-6216ec973630--knlkin",
+													HttpMethod.GET, requestEntity, String.class);
 			System.out.println(response.getBody());
 		} 
 		catch (HttpClientErrorException e)
@@ -45,6 +43,12 @@ public class RestClient
 				System.out.println("An unknown error has occurred");
 			}
 		}
+		
+		System.out.println("All Customers");
+		HttpEntity<ContactCollectionRepresentation> response = template.exchange("http://localhost:8080/comsWS/contacts",
+				HttpMethod.GET, requestEntity, ContactCollectionRepresentation.class);
+		ContactCollectionRepresentation results = response.getBody();
+		System.out.println(results);
 		
 	}
 

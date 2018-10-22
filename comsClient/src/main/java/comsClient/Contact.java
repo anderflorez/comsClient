@@ -38,5 +38,10 @@ public class Contact
 	{
 		this.firstName = firstName;
 	}
+	
+	public String toString()
+	{
+		return this.contactId;
+	}
 
 }
