@@ -1,4 +1,4 @@
-package comsClient;
+package com.unlimitedcompanies.comsClient.security.representations;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,9 +45,9 @@ public class RestClient
 		}
 		
 		System.out.println("All Customers");
-		HttpEntity<ContactCollectionRepresentation> response = template.exchange("http://localhost:8080/comsWS/contacts",
-				HttpMethod.GET, requestEntity, ContactCollectionRepresentation.class);
-		ContactCollectionRepresentation results = response.getBody();
+		HttpEntity<ContactCollection> response = template.exchange("http://localhost:8080/comsWS/contacts",
+				HttpMethod.GET, requestEntity, ContactCollection.class);
+		ContactCollection results = response.getBody();
 		System.out.println(results);
 		
 	}

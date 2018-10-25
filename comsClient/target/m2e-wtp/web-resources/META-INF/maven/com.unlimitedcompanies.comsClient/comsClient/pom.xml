@@ -26,8 +26,8 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.2</version>
 				<configuration>
-				<outputDirectory>${basedir}/../../../Resources/tomcat9/webapps/</outputDirectory>
-					<warName>comsClient</warName>
+				<outputDirectory>${basedir}/../../Resources/tomcat9/webapps/</outputDirectory>
+					<warName>coms</warName>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -1,4 +1,4 @@
-package comsClient;
+package com.unlimitedcompanies.comsClient.security.representations;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
