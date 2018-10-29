@@ -41,7 +41,7 @@ public class Contact
 	
 	public String toString()
 	{
-		return this.contactId;
+		return this.contactId + " " + this.firstName + " " + this.email;
 	}
 
 }
