@@ -12,7 +12,10 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Root level="INFO">
+		<Logger level="ERROR" name="org.springframework.core">
+			<AppenderRef ref="STDOUT" />
+		</Logger>
+		<Root level="ERROR">
 			<AppenderRef ref="STDOUT" />
 		</Root>
 	</Loggers>

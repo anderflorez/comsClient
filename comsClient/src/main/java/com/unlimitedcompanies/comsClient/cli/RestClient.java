@@ -68,6 +68,8 @@ public class RestClient
 		{		
 			System.out.println("An internal exception has occured. \nHttp status code: " + e.getStatusCode());
 		}
+		
+		
 	}
 
 }
