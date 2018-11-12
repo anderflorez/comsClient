@@ -8,8 +8,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unlimitedcompanies.comsClient.security.representations.ContactCollection;
 
 @Controller
 public class ReadSecurityObjectControllers
@@ -71,51 +73,41 @@ public class ReadSecurityObjectControllers
 		String credentials = "comsClient:somesecret";
 		String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 		
+		String url = "http://localhost:8080/comsws/oauth/token";
+	
 		HttpHeaders headers1 = new HttpHeaders();
-		headers1.add("Authorization", "Basic " + encodedCredentials);
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("Authorization", "Basic " + encodedCredentials);
+		params.add("code", code);
+		params.add("grant_type", "authorization_code");
+		params.add("redirect_uri", "http://localhost:8080/coms/contacts");
+		params.add("client_id", "comsClient");
+		headers1.addAll(params);
 		
 		HttpEntity<String> request = new HttpEntity<>(headers1);
 		
-		String url = "http://localhost:8080/comsws/oauth/token";
-		url += "?code=" + code;
-		url += "&grant_type=authorization_code";
-		url += "&redirect_uri=http://localhost:8080/coms/contacts";
-		url += "&client_id=comsClient";
+		System.out.println("=============================================");
+		System.out.println(request + "\n\n");
 		
-		System.out.println("\n\n========> Headers before request: \n" + request + "\n\n");
-	
 		ResponseEntity<String> response = template.exchange(url, HttpMethod.POST, request, String.class);
+				
 		
-		System.out.println("\n\n\n" + response.getBody() + "\n\n\n");
-		
-		
-		
+		// leg 3
 		
 		url = "http://localhost:8080/comsws/rest/contacts";
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode node = mapper.readTree(response.getBody());
 		String token = node.path("access_token").asText();
 		
-		HttpHeaders headers2 = new HttpHeaders();
-		headers2.add("Authorization", "Bearer " + token);
-		HttpEntity<String> contactRequest = new HttpEntity<String>(headers2);
+		System.out.println("=============================================");
+		System.out.println(token + "\n\n");
 		
-		System.out.println("\n\n========> url request: \n" + url);
-		System.out.println("========> headers before request: \n" + contactRequest + "\n\n");
+		HttpHeaders headersLeg3 = new HttpHeaders();
+		headersLeg3.add("Authorization", "Bearer " + token);
+		HttpEntity<ContactCollection> requestLeg3 = new HttpEntity<>(headersLeg3);		
+		ResponseEntity<ContactCollection> contacts = template.exchange(url, HttpMethod.GET, requestLeg3, ContactCollection.class);
 		
-
-		try
-		{
-			ResponseEntity<String> contactsResponseEntity = template.exchange(url, HttpMethod.GET, contactRequest, String.class);
-			System.out.println("\n\n\n" + contactsResponseEntity.getBody() + "\n\n\n");
-
-		} catch (OAuth2Exception e)
-		{
-			System.out.println("\n\n========> Exception occurred:\n");
-			System.out.println(e.getMessage());
-//			e.printStackTrace();
-		}
-				
-		return null;//new ModelAndView("/importedContacts.jsp", "contacts", contactsResponseEntity.getBody().getContacts());
+		return new ModelAndView("/importedContacts.jsp", "contacts", contacts.getBody().getContacts());
 	}
 }
