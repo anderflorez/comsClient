@@ -36,18 +36,12 @@
 		<param-name>contextClass</param-name>
 		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
 	</context-param>
-<!--
+	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			com.unlimitedcompanies.coms.data.config.ApplicationConfig,
-			com.unlimitedcompanies.coms.webConfig.SecurityConfiguration
+			com.unlimitedcompanies.comsClient.config.ClientWebConfiguration
 		</param-value>
-	</context-param>
-
-	<context-param>
-		<param-name>spring.profiles.active</param-name>
-		<param-value>production</param-value>
 	</context-param>
 	
 	<filter>
@@ -59,6 +53,5 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
- -->
 
 </web-app>
