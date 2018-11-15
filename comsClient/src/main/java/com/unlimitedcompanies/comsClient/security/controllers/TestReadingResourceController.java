@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
@@ -19,10 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unlimitedcompanies.comsClient.config.NullTokenException;
+import com.unlimitedcompanies.comsClient.config.NullOrIncompleteSessionException;
 import com.unlimitedcompanies.comsClient.config.UserSessionManager;
-import com.unlimitedcompanies.comsClient.security.representations.ClientUserDetailsRep;
 import com.unlimitedcompanies.comsClient.security.representations.ContactCollection;
+import com.unlimitedcompanies.comsClient.security.representations.LoggedUserInfo;
 
 @Controller
 public class TestReadingResourceController
@@ -112,15 +113,18 @@ public class TestReadingResourceController
 		
 		session.setToken(token);
 
-		// TODO: Make a REST request to obtain the information about the current user and save it in the session
 		
-		url = "http://localhost:8080/comsws/rest/userInfo";
+		// REST request to obtain the information about the current logged user and save it in the session		
+		url = "http://localhost:8080/comsws/rest/loggedUserInfo";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<ContactCollection> requestUserDetails = new HttpEntity<>(headers);
-		ResponseEntity<ClientUserDetailsRep> userInfo = template.exchange(url, HttpMethod.GET, requestUserDetails, ClientUserDetailsRep.class);
-		System.out.println("\n\n\n=====> User info obtained: " + userInfo.getBody().getUsername() + "\n\n");
+		headers.setContentType(MediaType.APPLICATION_XML);
+		HttpEntity<LoggedUserInfo> requestUserDetails = new HttpEntity<>(headers);
+		ResponseEntity<LoggedUserInfo> userInfo = template.exchange(url, HttpMethod.GET, requestUserDetails, LoggedUserInfo.class);
+		
 		session.setUsername(userInfo.getBody().getUsername());
+		session.setUserFirstName(userInfo.getBody().getuserFirstName());
+		session.setUserLastName(userInfo.getBody().getuserLastName());
 				
 		return new ModelAndView("redirect:" + session.getInitialRequest());
 	}
@@ -144,7 +148,7 @@ public class TestReadingResourceController
 			mv.setViewName("/importedContacts.jsp");
 			mv.addObject("contacts", contacts.getBody().getContacts());
 		} 
-		catch (NullTokenException e)
+		catch (NullOrIncompleteSessionException e)
 		{
 			mv.setViewName(session.getAuthCodeRedirectUrl("/contacts"));
 		}

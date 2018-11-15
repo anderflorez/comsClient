@@ -12,7 +12,7 @@
 		</button>
 		<div class="dropdown">
 			<a href="" id="user-menu" data-toggle="dropdown" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">
-				<span>${clientUser} ${clientUser}</span>
+				<span>${loggedUser.userFirstName} ${loggedUser.userLastName}</span>
 			</a>
 			<div class="dropdown-menu" aria-labelledby="user-menu">
 				<a href="#" class="dropdown-item"><i class="ti-settings"></i>Settings</a>

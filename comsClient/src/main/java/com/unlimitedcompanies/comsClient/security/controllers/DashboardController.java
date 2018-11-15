@@ -5,8 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.unlimitedcompanies.comsClient.config.NullTokenException;
+import com.unlimitedcompanies.comsClient.config.NullOrIncompleteSessionException;
 import com.unlimitedcompanies.comsClient.config.UserSessionManager;
+import com.unlimitedcompanies.comsClient.security.representations.LoggedUserInfo;
 
 @Controller
 public class DashboardController
@@ -20,11 +21,13 @@ public class DashboardController
 		ModelAndView mv = new ModelAndView();
 		try
 		{
-			String token = session.getToken();
+			LoggedUserInfo loggedUserInfo = new LoggedUserInfo(session.getUsername(), 
+															   session.getUserFirstName(), 
+															   session.getUserLastName());
 			mv.setViewName("/pages/dashboard/dashboard.jsp");
-			mv.addObject("clientUser", session.getUsername());
+			mv.addObject("loggedUser", loggedUserInfo);
 		} 
-		catch (NullTokenException e)
+		catch (NullOrIncompleteSessionException e)
 		{
 			mv.setViewName(session.getAuthCodeRedirectUrl("/"));
 		}

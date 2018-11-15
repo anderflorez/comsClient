@@ -11,18 +11,18 @@ public class UserSessionManager
 	private String token;
 	private String initialRequest;
 	private String username;
+	private String userFirstName;
+	private String userLastName;
 
 	public UserSessionManager()
 	{
 		this.token = null;
+		this.username = null;
 	}
 	
-	public String getToken() throws NullTokenException
+	public String getToken() throws NullOrIncompleteSessionException
 	{
-		if (this.token == null)
-		{
-			throw new NullTokenException();
-		}
+		this.checkSession();
 		return token;
 	}
 
@@ -31,26 +31,68 @@ public class UserSessionManager
 		this.token = token;
 	}
 
-
 	public String getInitialRequest()
 	{
 		return initialRequest;
 	}
 
-
 	public void setInitialRequest(String initialRequest)
 	{
-		this.initialRequest = initialRequest;
+		if (initialRequest == null || initialRequest.isEmpty())
+		{
+			this.initialRequest = "/";
+		}
+		else 
+		{
+			this.initialRequest = initialRequest;			
+		}
 	}
 	
-	public String getUsername()
+	public String getUsername() throws NullOrIncompleteSessionException
 	{
+		this.checkSession();
 		return username;
 	}
 
 	public void setUsername(String username)
 	{
 		this.username = username;
+	}
+
+	public String getUserFirstName()
+	{
+		return userFirstName;
+	}
+
+	public void setUserFirstName(String userFirstName)
+	{
+		this.userFirstName = userFirstName;
+		if (this.userFirstName == null)
+		{
+			this.userFirstName = "";
+		}
+	}
+
+	public String getUserLastName()
+	{
+		return userLastName;
+	}
+
+	public void setUserLastName(String userLastName)
+	{
+		this.userLastName = userLastName;
+		if (this.userLastName == null)
+		{
+			this.userLastName = "";
+		}
+	}
+	
+	public void checkSession() throws NullOrIncompleteSessionException
+	{
+		if (this.token == null || this.username == null)
+		{
+			throw new NullOrIncompleteSessionException();
+		}
 	}
 
 	public String getAuthCodeRedirectUrl(String request)

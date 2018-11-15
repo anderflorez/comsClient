@@ -6,8 +6,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Contact
 {
 	private String contactId;
-	private String email;
 	private String firstName;
+	private String middleName;
+	private String lastName;
+	private String email;
+	
+	public Contact() {}
 
 	public String getContactId()
 	{
@@ -19,16 +23,6 @@ public class Contact
 		this.contactId = contactId;
 	}
 
-	public String getEmail()
-	{
-		return email;
-	}
-
-	public void setEmail(String email)
-	{
-		this.email = email;
-	}
-
 	public String getFirstName()
 	{
 		return firstName;
@@ -38,10 +32,35 @@ public class Contact
 	{
 		this.firstName = firstName;
 	}
-	
-	public String toString()
+
+	public String getMiddleName()
 	{
-		return this.contactId + " " + this.firstName + " " + this.email;
+		return middleName;
 	}
 
+	public void setMiddleName(String middleName)
+	{
+		this.middleName = middleName;
+	}
+
+	public String getLastName()
+	{
+		return lastName;
+	}
+
+	public void setLastName(String lastName)
+	{
+		this.lastName = lastName;
+	}
+
+	public String getEmail()
+	{
+		return email;
+	}
+
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+	
 }
