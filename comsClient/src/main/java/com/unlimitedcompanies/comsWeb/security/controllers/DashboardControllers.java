@@ -10,7 +10,7 @@ import com.unlimitedcompanies.comsWeb.config.UserSessionManager;
 import com.unlimitedcompanies.comsWeb.security.representations.LoggedUserInfo;
 
 @Controller
-public class DashboardController
+public class DashboardControllers
 {
 	@Autowired
 	UserSessionManager session;

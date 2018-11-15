@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 public class ClientWebSecurityConfig extends WebSecurityConfigurerAdapter
-{
+{	
 	@Override
 	public void configure(WebSecurity web)
 	{
@@ -25,6 +25,10 @@ public class ClientWebSecurityConfig extends WebSecurityConfigurerAdapter
 		http.antMatcher("/**").authorizeRequests()
 							  .anyRequest()
 							  .permitAll()
+			.and().logout().clearAuthentication(true)
+						   .invalidateHttpSession(true)
+						   .deleteCookies("JSESSIONID")
+						   .logoutSuccessUrl("/")
 			.and().csrf().disable();
 	}
 }

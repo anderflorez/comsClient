@@ -105,4 +105,13 @@ public class UserSessionManager
 				+ "&redirect_uri=http://localhost:8080/coms/tokenmanager"
 				+ "&scope=trusted";
 	}
+	
+	public void clearSession()
+	{
+		this.token = null;
+		this.initialRequest = null;
+		this.username = null;
+		this.userFirstName = null;
+		this.userLastName = null;
+	}
 }
