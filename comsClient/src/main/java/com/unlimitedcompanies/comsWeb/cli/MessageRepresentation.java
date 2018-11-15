@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsClient.cli;
+package com.unlimitedcompanies.comsWeb.cli;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

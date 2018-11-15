@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsClient.cli;
+package com.unlimitedcompanies.comsWeb.cli;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -12,8 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.unlimitedcompanies.comsClient.security.representations.Contact;
-import com.unlimitedcompanies.comsClient.security.representations.ContactCollection;
+import com.unlimitedcompanies.comsWeb.security.representations.Contact;
+import com.unlimitedcompanies.comsWeb.security.representations.ContactCollection;
 
 public class RestClient
 {

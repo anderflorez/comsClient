@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsClient.config;
+package com.unlimitedcompanies.comsWeb.config;
 
 public class NullOrIncompleteSessionException extends Exception
 {

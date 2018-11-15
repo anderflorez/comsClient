@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsClient.security.representations;
+package com.unlimitedcompanies.comsWeb.security.representations;
 
 import java.time.ZonedDateTime;
 

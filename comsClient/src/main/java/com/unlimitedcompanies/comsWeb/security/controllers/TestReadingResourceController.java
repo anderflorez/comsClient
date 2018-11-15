@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsClient.security.controllers;
+package com.unlimitedcompanies.comsWeb.security.controllers;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -20,10 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unlimitedcompanies.comsClient.config.NullOrIncompleteSessionException;
-import com.unlimitedcompanies.comsClient.config.UserSessionManager;
-import com.unlimitedcompanies.comsClient.security.representations.ContactCollection;
-import com.unlimitedcompanies.comsClient.security.representations.LoggedUserInfo;
+import com.unlimitedcompanies.comsWeb.config.NullOrIncompleteSessionException;
+import com.unlimitedcompanies.comsWeb.config.UserSessionManager;
+import com.unlimitedcompanies.comsWeb.security.representations.ContactCollection;
+import com.unlimitedcompanies.comsWeb.security.representations.LoggedUserInfo;
 
 @Controller
 public class TestReadingResourceController
