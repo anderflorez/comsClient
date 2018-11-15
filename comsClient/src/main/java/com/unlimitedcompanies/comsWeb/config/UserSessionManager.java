@@ -59,8 +59,9 @@ public class UserSessionManager
 		this.username = username;
 	}
 
-	public String getUserFirstName()
+	public String getUserFirstName() throws NullOrIncompleteSessionException
 	{
+		this.checkSession();
 		return userFirstName;
 	}
 
@@ -85,6 +86,11 @@ public class UserSessionManager
 		{
 			this.userLastName = "";
 		}
+	}
+	
+	public String getLogedUserFullName() throws NullOrIncompleteSessionException
+	{
+		return this.getUserFirstName() + " " + this.getUserLastName();
 	}
 	
 	public void checkSession() throws NullOrIncompleteSessionException

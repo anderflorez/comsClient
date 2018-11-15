@@ -2,13 +2,13 @@
 
 <!DOCTYPE html>
 <html>
-<c:import url="head.jsp"/>
+<c:import url="/pages/navigation/head.jsp"/>
 <body>
 
-<c:import url="sidebar.jsp"/>
+<c:import url="/pages/navigation/sidebar.jsp"/>
 
 <div class="page-container">
-	<c:import url="header.jsp"/>
+	<c:import url="/pages/navigation/header.jsp"/>
 	
 	<div class="page-content">
 		
@@ -18,7 +18,7 @@
 
 </div>
 	
-<c:import url="scriptDefinitions.jsp"/>
+<c:import url="/pages/navigation/scriptDefinitions.jsp"/>
 
 </body>
 </html>

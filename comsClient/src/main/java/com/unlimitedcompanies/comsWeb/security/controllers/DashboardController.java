@@ -7,10 +7,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.unlimitedcompanies.comsWeb.config.NullOrIncompleteSessionException;
 import com.unlimitedcompanies.comsWeb.config.UserSessionManager;
-import com.unlimitedcompanies.comsWeb.security.representations.LoggedUserInfo;
 
 @Controller
-public class DashboardControllers
+public class DashboardController
 {
 	@Autowired
 	UserSessionManager session;
@@ -21,11 +20,8 @@ public class DashboardControllers
 		ModelAndView mv = new ModelAndView();
 		try
 		{
-			LoggedUserInfo loggedUserInfo = new LoggedUserInfo(session.getUsername(), 
-															   session.getUserFirstName(), 
-															   session.getUserLastName());
-			mv.setViewName("/pages/dashboard/dashboard.jsp");
-			mv.addObject("loggedUser", loggedUserInfo);
+			mv.setViewName("/pages/security/dashboard.jsp");
+			mv.addObject("loggedUser", session.getLogedUserFullName());
 		} 
 		catch (NullOrIncompleteSessionException e)
 		{
