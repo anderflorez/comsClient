@@ -9,20 +9,20 @@ import org.springframework.stereotype.Component;
 public class UserSessionManager
 {
 	private String token;
-	private String initialRequest;
 	private String username;
 	private String userFirstName;
 	private String userLastName;
+	private String initialRequest;
 
 	public UserSessionManager()
 	{
 		this.token = null;
 		this.username = null;
+		this.userFirstName = null;
 	}
 	
-	public String getToken() throws NullOrIncompleteSessionException
+	public String getToken()
 	{
-		this.checkSession();
 		return token;
 	}
 
@@ -30,27 +30,9 @@ public class UserSessionManager
 	{
 		this.token = token;
 	}
-
-	public String getInitialRequest()
-	{
-		return initialRequest;
-	}
-
-	public void setInitialRequest(String initialRequest)
-	{
-		if (initialRequest == null || initialRequest.isEmpty())
-		{
-			this.initialRequest = "/";
-		}
-		else 
-		{
-			this.initialRequest = initialRequest;			
-		}
-	}
 	
-	public String getUsername() throws NullOrIncompleteSessionException
+	public String getUsername()
 	{
-		this.checkSession();
 		return username;
 	}
 
@@ -59,9 +41,8 @@ public class UserSessionManager
 		this.username = username;
 	}
 
-	public String getUserFirstName() throws NullOrIncompleteSessionException
+	public String getUserFirstName()
 	{
-		this.checkSession();
 		return userFirstName;
 	}
 
@@ -87,35 +68,34 @@ public class UserSessionManager
 			this.userLastName = "";
 		}
 	}
-	
-	public String getLogedUserFullName() throws NullOrIncompleteSessionException
+		
+	public String getInitialRequest()
+	{
+		return initialRequest;
+	}
+
+	public void setInitialRequest(String initialRequest)
+	{
+		this.initialRequest = initialRequest;
+	}
+
+	public String getLogedUserFullName()
 	{
 		return this.getUserFirstName() + " " + this.getUserLastName();
 	}
 	
-	public void checkSession() throws NullOrIncompleteSessionException
+	public boolean checkSession()
 	{
-		if (this.token == null || this.username == null)
+		if (this.token == null || this.username == null || this.userFirstName == null)
 		{
-			throw new NullOrIncompleteSessionException();
+			return false;
 		}
-	}
-
-	public String getAuthCodeRedirectUrl(String request)
-	{
-		this.setInitialRequest(request);
-		return "redirect:"
-				+ "http://localhost:8080/comsws/oauth/authorize"
-				+ "?response_type=code"
-				+ "&client_id=comsClient"
-				+ "&redirect_uri=http://localhost:8080/coms/tokenmanager"
-				+ "&scope=trusted";
+		return true;
 	}
 	
 	public void clearSession()
 	{
 		this.token = null;
-		this.initialRequest = null;
 		this.username = null;
 		this.userFirstName = null;
 		this.userLastName = null;

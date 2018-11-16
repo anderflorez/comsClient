@@ -14,7 +14,6 @@ public class ContactCollection
 
 	public ContactCollection(List<Contact> contacts)
 	{
-		super();
 		this.contacts = contacts;
 	}
 

@@ -3,13 +3,13 @@
 
 <!DOCTYPE html>
 <html>
-<c:import url="../dashboard/head.jsp"/>
+<c:import url="/pages/navigation/head.jsp"/>
 <body>
 	
-<c:import url="../dashboard/sidebar.jsp" />
+<c:import url="/pages/navigation/sidebar.jsp" />
 
 <div class="page-container">
-	<c:import url="../dashboard/header.jsp" />
+	<c:import url="/pages/navigation/header.jsp" />
 
 	<!-- Styles -->
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/securityManagement.css'/>">
@@ -66,7 +66,7 @@
 	</div>
 </c:if>
 
-<c:import url="../dashboard/scriptDefinitions.jsp"/>
+<c:import url="/pages/navigation/scriptDefinitions.jsp"/>
 
 <!-- Scripts -->
 <script src="<c:url value='/js/securityManagement.js'/>" type="text/javascript" charset="utf-8" async defer></script>

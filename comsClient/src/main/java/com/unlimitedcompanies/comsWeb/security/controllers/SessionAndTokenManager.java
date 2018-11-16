@@ -69,7 +69,11 @@ public class SessionAndTokenManager
 		session.setUsername(userInfo.getBody().getUsername());
 		session.setUserFirstName(userInfo.getBody().getuserFirstName());
 		session.setUserLastName(userInfo.getBody().getuserLastName());
-				
-		return new ModelAndView("redirect:" + session.getInitialRequest());
+		
+		System.out.println("===================================================\n\n");
+		System.out.println("Redirecting from /tokenmanager to " + session.getInitialRequest());
+		System.out.println("\n\n===================================================");
+		
+		return new ModelAndView("redirect:/");
 	}
 }

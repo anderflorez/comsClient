@@ -1,8 +1,12 @@
 package com.unlimitedcompanies.comsWeb.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,5 +23,15 @@ public class ClientWebConfiguration implements WebMvcConfigurer
 		registry.addResourceHandler("/css/**").addResourceLocations("/css/");
 		registry.addResourceHandler("/images/**").addResourceLocations("/images/");
 		registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+	}
+	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry)
+	{
+		List<String> patterns = new ArrayList<>();
+		patterns.add("/coms/logout");
+		patterns.add("/coms/tokenmanager");
+		patterns.add("/coms/sessioncreator");
+		registry.addInterceptor(new RequestSessionCheckInterceptor()).excludePathPatterns("/coms/sessioncreator");
 	}
 }
