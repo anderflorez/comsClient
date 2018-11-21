@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "contacts")
 public class ContactCollection
-{
+{	
 	private List<Contact> contacts;
 
 	public ContactCollection() {}

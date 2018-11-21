@@ -5,24 +5,22 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class RequestSessionCheckInterceptor extends HandlerInterceptorAdapter
-{
-	@Autowired
-	UserSessionManager session;
-	
+{	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 	{
-		if (session == null)
+		// Find the session object
+		HttpSession httpSession = request.getSession();
+		UserSessionManager session = (UserSessionManager) httpSession.getAttribute("scopedTarget.userSessionManager");
+		
+		if (session ==  null || !session.checkSession())
 		{
-			System.out.println("===================================================\n\n");
-			System.out.println("Running interceptor - no session found");
-			System.out.println("\n\n===================================================");
-			
+			// Find out the user initial intended url target
 			String contextPath = request.getRequestURL().toString();
 			String url = contextPath;
 			if (url.endsWith("/"))
@@ -40,14 +38,17 @@ public class RequestSessionCheckInterceptor extends HandlerInterceptorAdapter
 				String param = paramNames.nextElement();
 				url += "&" + param + "=" + request.getParameter(param);
 			}
-			
+
+			// Save the initial user intended url target in the session
+			request.getSession().setAttribute("initial_request", url);
+						
 			try
-			{
-				System.out.println("===================================================\n\n");
-				System.out.println("returning false and redirecting to /sessioncreator?redirect_url=" + url);
-				System.out.println("\n\n===================================================");
-				
-				response.sendRedirect(contextPath + "sessioncreator");
+			{	
+				// Start the process to get authenticated with OAuth - Request authorization code
+				response.sendRedirect("http://localhost:8080/comsws/oauth/authorize"
+						+ "?response_type=code"
+						+ "&client_id=comsClient"
+						+ "&redirect_uri=" + contextPath + "tokenmanager");
 			} 
 			catch (IOException e)
 			{
@@ -55,57 +56,9 @@ public class RequestSessionCheckInterceptor extends HandlerInterceptorAdapter
 				e.printStackTrace();
 			}
 			return false;
-			
 		}
-//		else if (!session.checkSession())
-//		{
-//			System.out.println("===================================================\n\n");
-//			System.out.println("Running interceptor - found invalid session");
-//			System.out.println("\n\n===================================================");
-//			
-//			String contextPath = request.getRequestURL().toString(); 
-//			String url = contextPath;
-//			if (url.endsWith("/"))
-//			{
-//				url = url.substring(0, url.length() - 1);
-//			}
-//			Enumeration<String> paramNames = request.getParameterNames();
-//			if (paramNames.hasMoreElements())
-//			{
-//				String param = paramNames.nextElement();
-//				url += "?" + param + "=" + request.getParameter(param);
-//			}
-//			while(paramNames.hasMoreElements())
-//			{
-//				String param = paramNames.nextElement();
-//				url += "&" + param + "=" + request.getParameter(param);
-//			}
-//						
-//			try
-//			{
-//				System.out.println("===================================================\n\n");
-//				System.out.println("returning false and redirecting to comsws/oauth/authorize");
-//				System.out.println("\n\n===================================================");
-//				
-//				session.setInitialRequest(url);
-//				
-//				response.sendRedirect("http://localhost:8080/comsws/oauth/authorize"
-//						+ "?response_type=code"
-//						+ "&client_id=comsClient"
-//						+ "&redirect_uri=" + contextPath + "tokenmanager");
-//			} 
-//			catch (IOException e)
-//			{
-//				// TODO: Log the issue and provide an error to the user instead of printing the stack trace
-//				e.printStackTrace();
-//			}
-//			return false;
-//		}
 		else 
 		{
-			System.out.println("===================================================\n\n");
-			System.out.println("Running interceptor - Valid session found - returning true");
-			System.out.println("\n\n===================================================");
 			return true;
 		}
 		

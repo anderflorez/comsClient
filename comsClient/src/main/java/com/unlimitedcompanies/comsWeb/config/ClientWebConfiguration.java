@@ -29,9 +29,12 @@ public class ClientWebConfiguration implements WebMvcConfigurer
 	public void addInterceptors(InterceptorRegistry registry)
 	{
 		List<String> patterns = new ArrayList<>();
-		patterns.add("/coms/logout");
-		patterns.add("/coms/tokenmanager");
-		patterns.add("/coms/sessioncreator");
-		registry.addInterceptor(new RequestSessionCheckInterceptor()).excludePathPatterns("/coms/sessioncreator");
+		patterns.add("/css/**");
+		patterns.add("/js/**");
+		patterns.add("/images/**");
+		patterns.add("/tokenmanager");
+		patterns.add("/logout");
+		registry.addInterceptor(new RequestSessionCheckInterceptor()).addPathPatterns("/**")
+																	 .excludePathPatterns(patterns);
 	}
 }

@@ -3,6 +3,8 @@ package com.unlimitedcompanies.comsWeb.security.controllers;
 import java.io.IOException;
 import java.util.Base64;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,8 +32,10 @@ public class SessionAndTokenManager
 	UserSessionManager session;
 	
 	@RequestMapping("/tokenmanager")
-	public ModelAndView requestToken(@RequestParam("code") String code) throws IOException
+	public ModelAndView requestToken(@RequestParam("code") String code,
+									 HttpServletRequest httpRequest) throws IOException
 	{
+		// Request the access token and store it in the session
 		RestTemplate template = new RestTemplate();
 		template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 		
@@ -56,9 +60,9 @@ public class SessionAndTokenManager
 		String token = node.path("access_token").asText();
 		
 		session.setToken(token);
-
 		
-		// REST request to obtain the information about the current logged user and save it in the session		
+		
+		// Obtain the information about the current logged user and save it in the session
 		url = "http://localhost:8080/comsws/rest/loggedUserInfo";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + token);
@@ -70,10 +74,12 @@ public class SessionAndTokenManager
 		session.setUserFirstName(userInfo.getBody().getuserFirstName());
 		session.setUserLastName(userInfo.getBody().getuserLastName());
 		
-		System.out.println("===================================================\n\n");
-		System.out.println("Redirecting from /tokenmanager to " + session.getInitialRequest());
-		System.out.println("\n\n===================================================");
+		// TODO: Delete the next printing lines
+		System.out.println("=====================================\n\n");
+		System.out.println("The obtained token is: " + session.getToken());
+		System.out.println("\n\n=====================================");
 		
-		return new ModelAndView("redirect:/");
+		// After obtaining the necessary information for the session redirect to the initial user intended url
+		return new ModelAndView("redirect:" + httpRequest.getSession().getAttribute("initial_request"));
 	}
 }

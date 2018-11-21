@@ -43,7 +43,7 @@
 							</thead>
 							<tbody>
 								<c:forEach items="${contacts}" var="contact">
-									<tr class="clickable" data-href="<c:url value='/contactDetail?c=${contact.contactId}'/>">
+									<tr class="clickable" data-href="<c:url value='/contact?cid=${contact.contactId}'/>">
 										<td>${contact.firstName} ${contact.lastName}</td>
 										<td>${contact.email}</td>
 									</tr>
