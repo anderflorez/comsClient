@@ -5,32 +5,23 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "contacts")
-public class ContactCollection
+import com.unlimitedcompanies.comsWeb.appManagement.ResponseFacade;
+
+@XmlRootElement(name = "response")
+public class ContactCollection extends ResponseFacade
 {	
-	private List<Contact> contacts;
+	private List<Contact> contact;
 
 	public ContactCollection() {}
-
-	public ContactCollection(List<Contact> contacts)
-	{
-		this.contacts = contacts;
-	}
 
 	@XmlElement(name = "contact")
 	public List<Contact> getContacts()
 	{
-		return contacts;
+		return contact;
 	}
 
 	public void setContacts(List<Contact> contacts)
 	{
-		this.contacts = contacts;
+		this.contact = contacts;
 	}
-
-	public String toString()
-	{
-		return "The customers are " + contacts.toString();
-	}
-
 }

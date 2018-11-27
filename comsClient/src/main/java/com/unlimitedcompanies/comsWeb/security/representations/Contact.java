@@ -2,10 +2,12 @@ package com.unlimitedcompanies.comsWeb.security.representations;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.hateoas.ResourceSupport;
+
 @XmlRootElement
-public class Contact
+public class Contact extends ResourceSupport
 {
-	private String contactId;
+	private Integer contactId;
 	private String firstName;
 	private String middleName;
 	private String lastName;
@@ -13,12 +15,12 @@ public class Contact
 	
 	public Contact() {}
 
-	public String getContactId()
+	public Integer getContactId()
 	{
 		return contactId;
 	}
 
-	public void setContactId(String contactId)
+	public void setContactId(Integer contactId)
 	{
 		this.contactId = contactId;
 	}

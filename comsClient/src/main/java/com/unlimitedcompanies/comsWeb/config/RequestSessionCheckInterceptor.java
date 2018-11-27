@@ -9,6 +9,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
+
 public class RequestSessionCheckInterceptor extends HandlerInterceptorAdapter
 {	
 	@Override

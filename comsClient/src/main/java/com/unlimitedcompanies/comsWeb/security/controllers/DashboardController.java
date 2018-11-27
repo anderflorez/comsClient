@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.unlimitedcompanies.comsWeb.config.UserSessionManager;
+import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
 
 @Controller
 public class DashboardController
@@ -17,7 +17,7 @@ public class DashboardController
 	public ModelAndView showDashboard()
 	{
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("/pages/security/dashboard.jsp");
+		mv.setViewName("dashboard");
 		mv.addObject("loggedUser", session.getLogedUserFullName());
 		return mv;
 	}

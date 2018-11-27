@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unlimitedcompanies.comsWeb.config.UserSessionManager;
+import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
 import com.unlimitedcompanies.comsWeb.security.representations.LoggedUserInfo;
 
 @Controller

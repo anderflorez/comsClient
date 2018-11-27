@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsWeb.config;
+package com.unlimitedcompanies.comsWeb.appManagement;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
