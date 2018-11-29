@@ -3,13 +3,13 @@
 
 <!DOCTYPE html>
 <html>
-<c:import url="../dashboard/head.jsp"/>
+<c:import url="/pages/navigation/head.jsp"/>
 <body>
 
-<c:import url="../dashboard/sidebar.jsp" />
+<c:import url="/pages/navigation/sidebar.jsp" />
 
 <div class="page-container">
-	<c:import url="../dashboard/header.jsp" />
+	<c:import url="/pages/navigation/header.jsp" />
 
 	<!-- Styles -->
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/securityManagement.css'/>">
@@ -22,13 +22,13 @@
 			<a class="nav-item nav-link" href="<c:url value='/roles'/>">Roles</a>
 		</nav>
 
-		<div id="contactManagement">
+		<div>
 			<div class="jumbotron">
-				<c:if test="${contact.firstName != null}">
+				<c:if test="${contact.contactId != null}">
 					<h2>Edit Contact</h2>
 				</c:if>
 				
-				<c:if test="${contact.firstName == null}">
+				<c:if test="${contact.contactId == null}">
 					<h2>Create New Contact</h2>
 				</c:if>
 				<hr>
@@ -62,10 +62,10 @@
 					<div class="row">
 						<div class="col-12">
 							<input type="submit" class="btn btn-success float-right ml15" value="Save Contact">
-							<c:if test="${contact.firstName != null}">
-								<a href="<c:url value='/contactDetail?c=${contact.contactId}'/>" class="btn btn-secondary float-right ml15">Cancel</a>
+							<c:if test="${contact.contactId != null}">
+								<a href="<c:url value='/contact?cid=${contact.contactId}'/>" class="btn btn-secondary float-right ml15">Cancel</a>
 							</c:if>
-							<c:if test="${contact.firstName == null}">
+							<c:if test="${contact.contactId == null}">
 								<a href="<c:url value='/contacts'/>" class="btn btn-secondary float-right ml15">Cancel</a>
 							</c:if>
 						</div>
@@ -85,7 +85,7 @@
 	</div>
 </c:if>
 
-<c:import url="../dashboard/scriptDefinitions.jsp"/>
+<c:import url="/pages/navigation/scriptDefinitions.jsp"/>
 
 <!-- Scripts -->
 <script src="<c:url value='/js/securityManagement.js'/>" type="text/javascript" charset="utf-8" async defer></script>

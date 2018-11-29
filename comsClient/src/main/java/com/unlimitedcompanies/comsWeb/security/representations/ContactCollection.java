@@ -1,5 +1,6 @@
 package com.unlimitedcompanies.comsWeb.security.representations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -12,7 +13,10 @@ public class ContactCollection extends ResponseFacade
 {	
 	private List<Contact> contact;
 
-	public ContactCollection() {}
+	public ContactCollection() 
+	{
+		this.contact = new ArrayList<>();
+	}
 
 	@XmlElement(name = "contact")
 	public List<Contact> getContacts()

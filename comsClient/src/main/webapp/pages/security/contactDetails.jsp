@@ -35,7 +35,7 @@
 									Actions
 								</a>
 								<div class="dropdown-menu" aria-labelledby="actionMenu">
-									<a href="<c:url value='/manageContact?c=${contact.contactId}'/>" class="dropdown-item">Edit Contact</a>
+									<a href="<c:url value='/contactManagement?cid=${contact.contactId}'/>" class="dropdown-item">Edit Contact</a>
 									<c:if test="${contactUser == null}">
 										<a href="<c:url value='/manageUser?c=${contact.contactId}'/>" class="dropdown-item">Create User</a>
 									</c:if>

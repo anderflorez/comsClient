@@ -26,7 +26,7 @@
 			<div class="jumbotron">
 				<div id="newContact" class="row mb15">
 					<div class="col-12">
-						<button type="button" class="float-right btn btn-sm btn-outline-success clickable" data-href="<c:url value='/manageContact?c=0'/>">
+						<button type="button" class="float-right btn btn-sm btn-outline-success clickable" data-href="<c:url value='/contactManagement'/>">
 							New Contact
 						</button>
 					</div>

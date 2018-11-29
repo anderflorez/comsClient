@@ -8,11 +8,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class LinkManager
 {
+	private Map<String, String> baseLinks;
 	private Map<String, Map<Integer, String>> links;
 	
 	public LinkManager()
 	{
+		this.baseLinks = new HashMap<>();
 		this.links = new HashMap<>();
+	}
+	
+	public void addBaseLink(String key, String link)
+	{
+		this.baseLinks.put(key, link);
+	}
+	
+	public String getBaseLink(String linkKey) throws LinkNotFoundException
+	{
+		String link = this.baseLinks.get(linkKey);
+		if (link == null)
+		{
+			throw new LinkNotFoundException();
+		}
+		return link;
 	}
 	
 	public void addLink(String objectType, Integer objectId, String uri)
@@ -28,14 +45,17 @@ public class LinkManager
 		}
 	}
 	
-	public String getLink(String objectType, Integer objectId)
+	public String getLink(String objectType, Integer objectId) throws LinkNotFoundException
 	{
 		Map<Integer, String> link = this.links.get(objectType);
-		if (link != null)
+		if (link != null && link.get(objectId) != null)
 		{
 			return link.get(objectId);
 		}
-		return null;
+		else
+		{
+			throw new LinkNotFoundException();
+		}
 	}
 	
 	public void clearObjectType(String objectType)
