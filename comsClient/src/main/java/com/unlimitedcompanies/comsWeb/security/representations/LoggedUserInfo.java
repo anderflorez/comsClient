@@ -2,7 +2,7 @@ package com.unlimitedcompanies.comsWeb.security.representations;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="userDetailsRep")
+@XmlRootElement(name="UserDetailsRep")
 public class LoggedUserInfo
 {
 	String username;
