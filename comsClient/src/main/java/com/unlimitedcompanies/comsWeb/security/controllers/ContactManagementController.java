@@ -1,5 +1,8 @@
 package com.unlimitedcompanies.comsWeb.security.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -50,7 +53,7 @@ public class ContactManagementController
 												 
 				ContactCollection contactResponse = response.readEntity(ContactCollection.class);
 				
-				if (contactResponse.getErrorCode() == HttpStatus.OK.value() && !contactResponse.getContacts().isEmpty())
+				if (contactResponse.getStatusCode() == HttpStatus.OK.value() && !contactResponse.getContacts().isEmpty())
 				{
 					Contact contact = contactResponse.getContacts().get(0);
 					mv.addObject("contact", contact);
@@ -58,13 +61,15 @@ public class ContactManagementController
 				else
 				{
 					mv.setViewName("redirect:/contacts");
-					mv.addObject("error", contactResponse.getErrorMessage());
+					mv.addObject("errors", contactResponse.getErrors());
 				}
 			} 
 			catch (LinkNotFoundException e)
 			{
 				mv.setViewName("redirect:/contacts");
-				mv.addObject("error", "Error: The request to edit the contact is invalid, please try again");
+				List<String> errors = new ArrayList<>();
+				errors.add("Error: The request to edit the contact is invalid, please try again");
+				mv.addObject("errors", errors);
 			}
 		}
 		
@@ -93,18 +98,21 @@ public class ContactManagementController
 				if (response.getStatus() == HttpStatus.CREATED.value() && !contactResponse.getContacts().isEmpty())
 				{
 					mv.addObject("contact", contactResponse.getContacts().get(0));
+					mv.addObject("success", contactResponse.getSuccess());
 				}
 				else 
 				{
 					mv.setViewName("contactForm");
 					mv.addObject("contact", contact);
-					mv.addObject("error", contactResponse.getErrorMessage());
+					mv.addObject("errors", contactResponse.getErrors());
 				}
 			} 
 			catch (LinkNotFoundException e)
 			{
 				mv.setViewName("redirect:/contacts");
-				mv.addObject("error", "An internal error has occurred, please try again or contact your system administrator");
+				List<String> errors = new ArrayList<>();
+				errors.add("An internal error has occurred, please try again or contact your system administrator");
+				mv.addObject("errors", errors);
 				return mv;
 			}
 			
@@ -125,18 +133,21 @@ public class ContactManagementController
 				if (response.getStatus() == HttpStatus.OK.value() && !contactResponse.getContacts().isEmpty())
 				{
 					mv.addObject("contact", contactResponse.getContacts().get(0));
+					mv.addObject("success", contactResponse.getSuccess());
 				}
 				else 
 				{
 					mv.setViewName("contactForm");
 					mv.addObject("contact", contact);
-					mv.addObject("error", contactResponse.getErrorMessage());
+					mv.addObject("errors", contactResponse.getErrors());
 				}		
 			} 
 			catch (LinkNotFoundException e)
 			{
 				mv.setViewName("redirect:/contacts");
-				mv.addObject("error", "An internal error has occurred, please try again or contact your system administrator");
+				List<String> errors = new ArrayList<>();
+				errors.add("An internal error has occurred, please try again or contact your system administrator");
+				mv.addObject("errors", errors);
 				return mv;
 			}
 		}
@@ -157,17 +168,25 @@ public class ContactManagementController
 											 .header("Authorization", "Bearer " + session.getToken())
 											 .delete();
 			
-			if (response.getStatus() != HttpStatus.NO_CONTENT.value())
+			ContactCollection contactResponse = response.readEntity(ContactCollection.class);
+
+			if (response.getStatus() == HttpStatus.OK.value())
 			{
-				ContactCollection contactResponse = response.readEntity(ContactCollection.class);
+				mv.addObject("contact", new Contact());
+				mv.addObject("success", contactResponse.getSuccess());
+			}
+			else
+			{
 				mv.setViewName("redirect:/contacts");
-				mv.addObject("error", contactResponse.getErrorCode() + " " + contactResponse.getErrorMessage());
+				mv.addObject("errors", contactResponse.getErrors());
 			}
 		} 
 		catch (LinkNotFoundException e)
 		{
 			mv.setViewName("redirect:/contacts");
-			mv.addObject("error", "An internal error has occurred, please try again or contact your system administrator");
+			List<String> errors = new ArrayList<>();
+			errors.add("An internal error has occurred, please try again or contact your system administrator");
+			mv.addObject("errors", errors);
 			return mv;
 		}
 		

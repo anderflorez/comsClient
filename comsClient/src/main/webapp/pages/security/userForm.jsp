@@ -101,13 +101,15 @@
 	</div>	
 </div>
 
-<c:if test="${error != null}">
-	<div class="alert alert-danger alert-dismissible fade show" role="alert">
-		${error}
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
+<c:if test="${errors != null}">
+	<c:forEach items="${errors}" var="error">
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			${error}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>	
+	</c:forEach>
 </c:if>
 
 <c:import url="../dashboard/scriptDefinitions.jsp"/>

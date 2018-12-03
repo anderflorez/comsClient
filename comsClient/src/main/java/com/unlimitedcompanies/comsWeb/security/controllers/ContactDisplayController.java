@@ -1,5 +1,8 @@
 package com.unlimitedcompanies.comsWeb.security.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
@@ -26,7 +29,8 @@ public class ContactDisplayController
 	LinkManager links;
 	
 	@RequestMapping(value = "/contacts", method = RequestMethod.GET)
-	public ModelAndView findAllContacts(@RequestParam(name = "error", required = false) String error)
+	public ModelAndView findAllContacts(@RequestParam(name = "errors", required = false) List<String> errors,
+										@RequestParam(name = "success", required = false) String success)
 	{
 		ModelAndView mv = new ModelAndView("contactList");
 		
@@ -42,9 +46,13 @@ public class ContactDisplayController
 		links.addBaseLink("contact", contactsResponse.getLink("base_url").getHref());
 		
 		mv.addObject("contacts", contactsResponse.getContacts());
-		if (error != null)
+		if (errors != null)
 		{
-			mv.addObject("error", error);
+			mv.addObject("errors", errors);
+		}
+		if (success != null)
+		{
+			mv.addObject("success", success);
 		}
 		
 		mv.addObject("loggedUser", session.getLogedUserFullName());
@@ -66,10 +74,10 @@ public class ContactDisplayController
 
 			ContactCollection contactResponse = response.readEntity(ContactCollection.class);
 			
-			if (contactResponse.getErrorCode() == HttpStatus.NOT_FOUND.value())
+			if (contactResponse.getStatusCode() == HttpStatus.NOT_FOUND.value())
 			{
 				mv.setViewName("redirect:/contacts");
-				mv.addObject("error", response.getStatus() + " " + contactResponse.getErrorMessage());
+				mv.addObject("errors", contactResponse.getErrors());
 			}
 			else if (!contactResponse.getContacts().isEmpty())
 			{
@@ -79,7 +87,9 @@ public class ContactDisplayController
 			else 
 			{
 				mv.setViewName("redirect:/contacts");
-				mv.addObject("error", "Unknown error " + response.getStatus());
+				List<String> errors = new ArrayList<>();
+				errors.add("Unknown error " + response.getStatus());
+				mv.addObject("errors", errors);
 			}
 		} 
 		catch (LinkNotFoundException e)
