@@ -30,13 +30,25 @@ public class ContactDisplayController
 	
 	@RequestMapping(value = "/contacts", method = RequestMethod.GET)
 	public ModelAndView findAllContacts(@RequestParam(name = "errors", required = false) List<String> errors,
-										@RequestParam(name = "success", required = false) String success)
+										@RequestParam(name = "success", required = false) String success,
+										@RequestParam(name = "pag", required = false) Integer pag,
+										@RequestParam(name = "epp", required = false) Integer epp)
 	{
 		ModelAndView mv = new ModelAndView("contactList");
 		
+		String url;
+		if (pag != null && epp != null)
+		{
+			url = "http://localhost:8080/comsws/rest/contacts?pag=" + pag + "&epp=" + epp;
+		}
+		else
+		{
+			url = "http://localhost:8080/comsws/rest/contacts";
+		}
+		
 		// TODO: Improve the address hard coding if possible
 		Response response = ClientBuilder.newClient()
-										 .target("http://localhost:8080/comsws/rest/contacts")
+										 .target(url)
 										 .request()
 										 .header("Authorization", "Bearer " + session.getToken())
 										 .get();
@@ -55,6 +67,8 @@ public class ContactDisplayController
 			mv.addObject("success", success);
 		}
 		
+		mv.addObject("previous", contactsResponse.getLink("previous").getHref());
+		mv.addObject("next", contactsResponse.getLink("next").getHref());
 		mv.addObject("loggedUser", session.getLogedUserFullName());
 		return mv;
 	}
