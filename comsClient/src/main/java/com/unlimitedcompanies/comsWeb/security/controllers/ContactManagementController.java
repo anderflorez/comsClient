@@ -190,8 +190,6 @@ public class ContactManagementController
 			return mv;
 		}
 		
-		// TODO: Improve by showing the user a message for successful operation
-		
 		return mv;
 	}
 }

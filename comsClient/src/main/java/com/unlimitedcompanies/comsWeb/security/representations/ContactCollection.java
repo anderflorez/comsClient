@@ -11,14 +11,18 @@ import com.unlimitedcompanies.comsWeb.appManagement.ResponseFacade;
 @XmlRootElement(name = "response")
 public class ContactCollection extends ResponseFacade
 {	
+	@XmlElement(name = "contact")
 	private List<Contact> contact;
+	private Integer prevPage;
+	private Integer nextPage;
 
 	public ContactCollection() 
 	{
 		this.contact = new ArrayList<>();
+		this.prevPage = null;
+		this.nextPage = null;
 	}
 
-	@XmlElement(name = "contact")
 	public List<Contact> getContacts()
 	{
 		return contact;
@@ -28,4 +32,25 @@ public class ContactCollection extends ResponseFacade
 	{
 		this.contact = contacts;
 	}
+
+	public Integer getPrevPage()
+	{
+		return prevPage;
+	}
+
+	public void setPrevPage(Integer prevPage)
+	{
+		this.prevPage = prevPage;
+	}
+
+	public Integer getNextPage()
+	{
+		return nextPage;
+	}
+
+	public void setNextPage(Integer nextPage)
+	{
+		this.nextPage = nextPage;
+	}
+	
 }

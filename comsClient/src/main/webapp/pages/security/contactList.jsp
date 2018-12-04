@@ -48,17 +48,21 @@
 									<c:forEach items="${contacts}" var="contact">
 										<tr class="clickable"
 											data-href="<c:url value='/contact?cid=${contact.contactId}'/>">
-											<td>${contact.firstName}${contact.lastName}</td>
+											<td>${contact.firstName} ${contact.lastName}</td>
 											<td>${contact.email}</td>
 										</tr>
 									</c:forEach>
 								</tbody>
 							</table>
 						</div>
-						<div class="col-12 btn-group d-flex justify-content-center mt-4">
-							<a href="${previous}" class="btn btn-success">Previous</a>
-							<a href="${next}" class="btn btn-success">Next</a>
-						</div>
+						<c:if test="${next != null || previous != null}">
+							<div class="col-12 btn-group d-flex justify-content-center mt-4">
+								<c:if test="${previous == null}"><a class="btn btn-info disabled">Previous</a></c:if>
+								<c:if test="${previous != null}"><a href="${previous}" class="btn btn-info">Previous</a></c:if>
+								<c:if test="${next == null}"><a class="btn btn-info disabled">Next</a></c:if>
+								<c:if test="${next != null}"><a href="${next}" class="btn btn-info">Next</a></c:if>
+							</div>						
+						</c:if>
 					</div>
 				</div>
 			</div>

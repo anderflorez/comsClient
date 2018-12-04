@@ -3,6 +3,7 @@ package com.unlimitedcompanies.comsWeb.security.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
@@ -29,21 +30,19 @@ public class ContactDisplayController
 	LinkManager links;
 	
 	@RequestMapping(value = "/contacts", method = RequestMethod.GET)
-	public ModelAndView findAllContacts(@RequestParam(name = "errors", required = false) List<String> errors,
+	public ModelAndView findAllContacts(HttpServletRequest request,
+										@RequestParam(name = "errors", required = false) List<String> errors,
 										@RequestParam(name = "success", required = false) String success,
 										@RequestParam(name = "pag", required = false) Integer pag,
 										@RequestParam(name = "epp", required = false) Integer epp)
 	{
 		ModelAndView mv = new ModelAndView("contactList");
 		
-		String url;
-		if (pag != null && epp != null)
+		String url = "http://localhost:8080/comsws/rest/contacts";
+		if (pag != null)
 		{
-			url = "http://localhost:8080/comsws/rest/contacts?pag=" + pag + "&epp=" + epp;
-		}
-		else
-		{
-			url = "http://localhost:8080/comsws/rest/contacts";
+			url += "?pag=" + pag;
+			if (epp != null) url += "&epp=" + epp;
 		}
 		
 		// TODO: Improve the address hard coding if possible
@@ -53,22 +52,32 @@ public class ContactDisplayController
 										 .header("Authorization", "Bearer " + session.getToken())
 										 .get();
 		
-		ContactCollection contactsResponse = response.readEntity(ContactCollection.class);
+		ContactCollection contactResponse = response.readEntity(ContactCollection.class);
 		
-		links.addBaseLink("contact", contactsResponse.getLink("base_url").getHref());
+		links.addBaseLink("contact", contactResponse.getLink("base_url").getHref());
 		
-		mv.addObject("contacts", contactsResponse.getContacts());
+		mv.addObject("contacts", contactResponse.getContacts());
+		
 		if (errors != null)
 		{
 			mv.addObject("errors", errors);
 		}
+		
 		if (success != null)
 		{
 			mv.addObject("success", success);
 		}
 		
-		mv.addObject("previous", contactsResponse.getLink("previous").getHref());
-		mv.addObject("next", contactsResponse.getLink("next").getHref());
+		if (contactResponse.getPrevPage() != null)
+		{
+			mv.addObject("previous", request.getContextPath() + "/contacts?pag=" + contactResponse.getPrevPage());
+		}
+		
+		if (contactResponse.getNextPage() != null)
+		{
+			mv.addObject("next", request.getContextPath() + "/contacts?pag=" + contactResponse.getNextPage());
+		}
+		
 		mv.addObject("loggedUser", session.getLogedUserFullName());
 		return mv;
 	}
