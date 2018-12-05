@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Base64;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -63,6 +65,25 @@ public class SessionAndTokenManager
 		
 		
 		// Obtain the information about the current logged user and save it in the session
+		// TODO: update this code to use Jersey instead of Spring
+		
+		Response loggedUserresponse = ClientBuilder.newClient()
+										 .target("http://localhost:8080/comsws/rest/loggedUserInfo")
+										 .request()
+										 .header("Authorization", "Bearer " + token)
+										 .get();
+		
+		String stringResponse = loggedUserresponse.readEntity(String.class);
+		System.out.println("========================== Response ==========================");
+		System.out.println(stringResponse);
+		System.out.println("==============================================================");
+		
+		
+		
+		
+		
+		
+		
 		url = "http://localhost:8080/comsws/rest/loggedUserInfo";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + token);

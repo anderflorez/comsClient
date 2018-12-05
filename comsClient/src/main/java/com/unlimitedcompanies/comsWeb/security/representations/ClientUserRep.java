@@ -1,21 +1,19 @@
 package com.unlimitedcompanies.comsWeb.security.representations;
 
-import java.time.ZonedDateTime;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-public class User
+@XmlRootElement(name = "user")
+public class ClientUserRep
 {
 	private Integer userId;
 	private String username;
-	private String password;
-	private String enabled;
-	private ZonedDateTime dateAdded;
-	private ZonedDateTime lastAccess;
+	private char[] password;
+	private boolean enabled;
+	private String dateAdded;
+	private String lastAccess;
 	private Contact contact;
 	
-	public User() {}
+	public ClientUserRep() {}
 
 	public Integer getUserId()
 	{
@@ -37,42 +35,42 @@ public class User
 		this.username = username;
 	}
 
-	public String getPassword()
+	public char[] getPassword()
 	{
 		return password;
 	}
 
-	public void setPassword(String password)
+	public void setPassword(char[] password)
 	{
 		this.password = password;
 	}
 
-	public String getEnabled()
+	public boolean getEnabled()
 	{
 		return enabled;
 	}
 
-	public void setEnabled(String enabled)
+	public void setEnabled(boolean enabled)
 	{
 		this.enabled = enabled;
 	}
 
-	public ZonedDateTime getDateAdded()
+	public String getDateAdded()
 	{
 		return dateAdded;
 	}
 
-	public void setDateAdded(ZonedDateTime dateAdded)
+	public void setDateAdded(String dateAdded)
 	{
 		this.dateAdded = dateAdded;
 	}
 
-	public ZonedDateTime getLastAccess()
+	public String getLastAccess()
 	{
 		return lastAccess;
 	}
 
-	public void setLastAccess(ZonedDateTime lastAccess)
+	public void setLastAccess(String lastAccess)
 	{
 		this.lastAccess = lastAccess;
 	}
@@ -86,5 +84,5 @@ public class User
 	{
 		this.contact = contact;
 	}
-		
+
 }
