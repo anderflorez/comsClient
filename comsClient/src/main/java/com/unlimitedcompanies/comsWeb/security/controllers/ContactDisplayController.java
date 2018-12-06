@@ -18,7 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkManager;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkNotFoundException;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
+import com.unlimitedcompanies.comsWeb.security.representations.Contact;
 import com.unlimitedcompanies.comsWeb.security.representations.ContactCollection;
+import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
 
 @Controller
 public class ContactDisplayController
@@ -94,32 +96,28 @@ public class ContactDisplayController
 											 .request()
 											 .header("Authorization", "Bearer " + session.getToken())
 											 .get();
-
-			ContactCollection contactResponse = response.readEntity(ContactCollection.class);
 			
-			if (contactResponse.getStatusCode() == HttpStatus.NOT_FOUND.value())
+			if (response.getStatus() == HttpStatus.OK.value())
 			{
-				mv.setViewName("redirect:/contacts");
-				mv.addObject("errors", contactResponse.getErrors());
+				Contact contact = response.readEntity(Contact.class);
+				mv.addObject("contact", contact);
+				mv.addObject("loggedUser", session.getLogedUserFullName());		
 			}
-			else if (!contactResponse.getContacts().isEmpty())
+			else
 			{
-				mv.addObject("contact", contactResponse.getContacts().get(0));
-				mv.addObject("loggedUser", session.getLogedUserFullName());
-			}
-			else 
-			{
+				ErrorMessages error = response.readEntity(ErrorMessages.class);
 				mv.setViewName("redirect:/contacts");
-				List<String> errors = new ArrayList<>();
-				errors.add("Unknown error " + response.getStatus());
-				mv.addObject("errors", errors);
+				mv.addObject("errors", error.getErrors());
+				mv.addObject("messages", error.getMessages());
 			}
 		} 
 		catch (LinkNotFoundException e)
 		{
 			mv.setViewName("redirect:/contacts");
-			mv.addObject("error", "Error: The request to display a contact is invalid");
-		}		
+			List<String> errors = new ArrayList<>();
+			errors.add("Error: The request to display a contact is invalid");
+			mv.addObject("errors", errors);
+		}
 		
 		return mv;
 

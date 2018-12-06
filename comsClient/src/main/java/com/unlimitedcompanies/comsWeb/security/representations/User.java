@@ -1,10 +1,13 @@
 package com.unlimitedcompanies.comsWeb.security.representations;
 
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "user")
-public class ClientUserRep
-{
+public class User
+{	
 	private Integer userId;
 	private String username;
 	private char[] password;
@@ -12,8 +15,9 @@ public class ClientUserRep
 	private String dateAdded;
 	private String lastAccess;
 	private Contact contact;
+	private List<Role> roles;
 	
-	public ClientUserRep() {}
+	public User() {}
 
 	public Integer getUserId()
 	{
@@ -49,6 +53,11 @@ public class ClientUserRep
 	{
 		return enabled;
 	}
+	
+	public String getEnabledStatus()
+	{
+		return this.enabled ? "Active" : "Inactive";
+	}
 
 	public void setEnabled(boolean enabled)
 	{
@@ -83,6 +92,17 @@ public class ClientUserRep
 	public void setContact(Contact contact)
 	{
 		this.contact = contact;
+	}
+
+	@XmlElement(name = "role")
+	public List<Role> getRoles()
+	{
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles)
+	{
+		this.roles = roles;
 	}
 
 }

@@ -9,9 +9,8 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
-import com.unlimitedcompanies.comsWeb.security.representations.LoggedUserInfo;
+import com.unlimitedcompanies.comsWeb.security.representations.User;
 
 @Controller
 public class SessionAndTokenManager
@@ -37,6 +36,8 @@ public class SessionAndTokenManager
 	public ModelAndView requestToken(@RequestParam("code") String code,
 									 HttpServletRequest httpRequest) throws IOException
 	{
+		// Convert the next request to use Jersey instead of the Spring RestTemplate
+		
 		// Request the access token and store it in the session
 		RestTemplate template = new RestTemplate();
 		template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
@@ -63,44 +64,36 @@ public class SessionAndTokenManager
 		
 		session.setToken(token);
 		
-		
-		// Obtain the information about the current logged user and save it in the session
-		// TODO: update this code to use Jersey instead of Spring
-		
-		Response loggedUserresponse = ClientBuilder.newClient()
-										 .target("http://localhost:8080/comsws/rest/loggedUserInfo")
-										 .request()
-										 .header("Authorization", "Bearer " + token)
-										 .get();
-		
-		String stringResponse = loggedUserresponse.readEntity(String.class);
-		System.out.println("========================== Response ==========================");
-		System.out.println(stringResponse);
-		System.out.println("==============================================================");
-		
-		
-		
-		
-		
-		
-		
-		url = "http://localhost:8080/comsws/rest/loggedUserInfo";
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		headers.setContentType(MediaType.APPLICATION_XML);
-		HttpEntity<LoggedUserInfo> requestUserDetails = new HttpEntity<>(headers);
-		ResponseEntity<LoggedUserInfo> userInfo = template.exchange(url, HttpMethod.GET, requestUserDetails, LoggedUserInfo.class);
-		
-		session.setUsername(userInfo.getBody().getUsername());
-		session.setUserFirstName(userInfo.getBody().getuserFirstName());
-		session.setUserLastName(userInfo.getBody().getuserLastName());
-		
 		// TODO: Delete the next printing lines
 		System.out.println("=====================================\n\n");
 		System.out.println("The obtained token is: " + session.getToken());
 		System.out.println("\n\n=====================================");
 		
-		// After obtaining the necessary information for the session redirect to the initial user intended url
-		return new ModelAndView("redirect:" + httpRequest.getSession().getAttribute("initial_request"));
+
+		// Obtain the information about the current logged user and save it in the session
+		Response loggedUserResponse = ClientBuilder.newClient()
+										 .target("http://localhost:8080/comsws/rest/loggedUser")
+										 .request()
+										 .header("Authorization", "Bearer " + token)
+										 .get();
+		
+		if (loggedUserResponse.getStatus() == HttpStatus.OK.value())
+		{
+			User loggedUser = loggedUserResponse.readEntity(User.class);
+			
+			session.setUsername(loggedUser.getUsername());
+			session.setUserFirstName(loggedUser.getContact().getFirstName());
+			session.setUserLastName(loggedUser.getContact().getLastName());
+
+			// After obtaining the necessary information for the session, redirect to the initial user intended url
+			return new ModelAndView("redirect:" + httpRequest.getSession().getAttribute("initial_request"));
+		}
+		else
+		{
+			// Return an error to the user
+			System.out.println("===> Error while getting the logged user: " + loggedUserResponse.getStatus());
+			return null;
+		}
+		
 	}
 }

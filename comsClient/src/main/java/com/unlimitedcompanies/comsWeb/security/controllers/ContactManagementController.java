@@ -19,7 +19,7 @@ import com.unlimitedcompanies.comsWeb.appManagement.LinkManager;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkNotFoundException;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
 import com.unlimitedcompanies.comsWeb.security.representations.Contact;
-import com.unlimitedcompanies.comsWeb.security.representations.ContactCollection;
+import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
 
 @Controller
 public class ContactManagementController
@@ -50,18 +50,18 @@ public class ContactManagementController
 												 .request()
 												 .header("Authorization", "Bearer " + session.getToken())
 												 .get();
-												 
-				ContactCollection contactResponse = response.readEntity(ContactCollection.class);
 				
-				if (contactResponse.getStatusCode() == HttpStatus.OK.value() && !contactResponse.getContacts().isEmpty())
+				if (response.getStatus() == HttpStatus.OK.value())
 				{
-					Contact contact = contactResponse.getContacts().get(0);
-					mv.addObject("contact", contact);
+					Contact contact = response.readEntity(Contact.class);
+					mv.addObject("contact", contact);					
 				}
 				else
 				{
+					ErrorMessages errors = response.readEntity(ErrorMessages.class);
 					mv.setViewName("redirect:/contacts");
-					mv.addObject("errors", contactResponse.getErrors());
+					mv.addObject("errors", errors.getErrors());
+					mv.addObject("messages", errors.getMessages());
 				}
 			} 
 			catch (LinkNotFoundException e)
@@ -93,18 +93,17 @@ public class ContactManagementController
 												 .header("Authorization", "Bearer " + session.getToken())
 												 .post(Entity.json(contact));
 				
-				ContactCollection contactResponse = response.readEntity(ContactCollection.class);
-				
-				if (response.getStatus() == HttpStatus.CREATED.value() && !contactResponse.getContacts().isEmpty())
+				if (response.getStatus() == HttpStatus.CREATED.value())
 				{
-					mv.addObject("contact", contactResponse.getContacts().get(0));
-					mv.addObject("success", contactResponse.getSuccess());
+					Contact contactResponse = response.readEntity(Contact.class);
+					mv.addObject("contact", contactResponse);
+					mv.addObject("success", "The client has been created successfully");
 				}
 				else 
 				{
+					ErrorMessages errors = response.readEntity(ErrorMessages.class);
 					mv.setViewName("contactForm");
-					mv.addObject("contact", contact);
-					mv.addObject("errors", contactResponse.getErrors());
+					mv.addObject("errors", errors.getErrors());
 				}
 			} 
 			catch (LinkNotFoundException e)
@@ -128,19 +127,20 @@ public class ContactManagementController
 												 .header("Authorization", "Bearer " + session.getToken())
 												 .put(Entity.json(contact));
 				
-				ContactCollection contactResponse = response.readEntity(ContactCollection.class);
-				
-				if (response.getStatus() == HttpStatus.OK.value() && !contactResponse.getContacts().isEmpty())
+				if (response.getStatus() == HttpStatus.OK.value())
 				{
-					mv.addObject("contact", contactResponse.getContacts().get(0));
-					mv.addObject("success", contactResponse.getSuccess());
+					Contact updatedContact = response.readEntity(Contact.class);
+					mv.addObject("contact", updatedContact);
+					mv.addObject("success", "The contact has been updated successfully");					
 				}
 				else 
 				{
+					ErrorMessages errors = response.readEntity(ErrorMessages.class);
 					mv.setViewName("contactForm");
 					mv.addObject("contact", contact);
-					mv.addObject("errors", contactResponse.getErrors());
+					mv.addObject("errors", errors.getErrors());
 				}		
+				
 			} 
 			catch (LinkNotFoundException e)
 			{
@@ -168,18 +168,17 @@ public class ContactManagementController
 											 .header("Authorization", "Bearer " + session.getToken())
 											 .delete();
 			
-			ContactCollection contactResponse = response.readEntity(ContactCollection.class);
-
-			if (response.getStatus() == HttpStatus.OK.value())
+			if (response.getStatus() == HttpStatus.NO_CONTENT.value())
 			{
-				mv.addObject("contact", new Contact());
-				mv.addObject("success", contactResponse.getSuccess());
+				mv.addObject("success", "The contact has been deleted successfully");				
 			}
 			else
 			{
+				ErrorMessages errors = response.readEntity(ErrorMessages.class);
 				mv.setViewName("redirect:/contacts");
-				mv.addObject("errors", contactResponse.getErrors());
+				mv.addObject("errors", errors.getErrors());
 			}
+			
 		} 
 		catch (LinkNotFoundException e)
 		{
