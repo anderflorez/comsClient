@@ -37,11 +37,11 @@
 							</thead>
 							<tbody>
 								<c:forEach items="${users}" var="user">
-									<tr class="clickable" data-href="<c:url value='/userDetail?u=${user.userId}'/>">
+									<tr class="clickable" data-href="<c:url value='/user?uid=${user.userId}'/>">
 										<td>${user.username}</td>
 										<td>${user.getEnabledStatus()}</td>
-										<td>${user.getClientLocalDateAdded()}</td>
-										<td>${user.getDateAdded()}</td>
+										<td>${user.dateAdded}</td>
+										<td>${user.lastAccess}</td>
 									</tr>
 								</c:forEach>
 							</tbody>

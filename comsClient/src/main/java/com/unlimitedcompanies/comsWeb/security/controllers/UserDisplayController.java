@@ -1,5 +1,6 @@
 package com.unlimitedcompanies.comsWeb.security.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,13 +8,18 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.unlimitedcompanies.comsWeb.appManagement.LinkManager;
+import com.unlimitedcompanies.comsWeb.appManagement.LinkNotFoundException;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
+import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
+import com.unlimitedcompanies.comsWeb.security.representations.User;
 import com.unlimitedcompanies.comsWeb.security.representations.UserCollection;
 
 @Controller
@@ -77,5 +83,44 @@ public class UserDisplayController
 		
 		mv.addObject("loggedUser", session.getLogedUserFullName());
 		return mv;
+	}
+	
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	public ModelAndView findContactDetails(@RequestParam("uid") Integer id)
+	{
+		ModelAndView mv = new ModelAndView("userDetails");
+		
+		try
+		{
+			Response response = ClientBuilder.newClient()
+											 .target(links.getBaseLink("user") + id)
+											 .request()
+											 .header("Authorization", "Bearer " + session.getToken())
+											 .get();
+			
+			if (response.getStatus() == HttpStatus.OK.value())
+			{
+				User user = response.readEntity(User.class);
+				mv.addObject("userForm", user);
+				mv.addObject("loggedUser", session.getLogedUserFullName());
+			}
+			else
+			{
+				ErrorMessages error = response.readEntity(ErrorMessages.class);
+				mv.setViewName("redirect:/users");
+				mv.addObject("errors", error.getErrors());
+				mv.addObject("messages", error.getMessages());
+			}
+		} 
+		catch (LinkNotFoundException e)
+		{
+			mv.setViewName("redirect:/users");
+			List<String> errors = new ArrayList<>();
+			errors.add("Error: The request to display a user is invalid");
+			mv.addObject("errors", errors);
+		}
+		
+		return mv;
+
 	}
 }

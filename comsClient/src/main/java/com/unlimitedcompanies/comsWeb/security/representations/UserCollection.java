@@ -3,6 +3,7 @@ package com.unlimitedcompanies.comsWeb.security.representations;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.unlimitedcompanies.comsWeb.appManagement.ResponseFacade;
@@ -21,6 +22,7 @@ public class UserCollection extends ResponseFacade
 		this.nextPage = null;
 	}
 
+	@XmlElement(name = "user")
 	public List<User> getUsers()
 	{
 		return users;
