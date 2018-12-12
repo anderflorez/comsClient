@@ -84,7 +84,7 @@ public class ContactManagementController
 		
 		if (contact.getContactId() == null)
 		{
-			// Make a request to create a new contact			
+			// Make a request to create a new contact
 			try
 			{
 				Response response = ClientBuilder.newClient()

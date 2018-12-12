@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
+import com.unlimitedcompanies.comsWeb.security.representations.Contact;
 import com.unlimitedcompanies.comsWeb.security.representations.User;
 
 @Controller
@@ -80,20 +81,35 @@ public class SessionAndTokenManager
 		if (loggedUserResponse.getStatus() == HttpStatus.OK.value())
 		{
 			User loggedUser = loggedUserResponse.readEntity(User.class);
-			
 			session.setUsername(loggedUser.getUsername());
-			session.setUserFirstName(loggedUser.getContact().getFirstName());
-			session.setUserLastName(loggedUser.getContact().getLastName());
-
-			// After obtaining the necessary information for the session, redirect to the initial user intended url
-			return new ModelAndView("redirect:" + httpRequest.getSession().getAttribute("initial_request"));
+			
+			Response loggedContactResponse = ClientBuilder.newClient()
+					 								.target(loggedUser.getLink("contact").getHref())
+													.request()
+													.header("Authorization", "Bearer " + token)
+													.get();
+			
+			if (loggedContactResponse.getStatus() == HttpStatus.OK.value())
+			{
+				Contact loggedContact = loggedContactResponse.readEntity(Contact.class);
+				session.setUserFirstName(loggedContact.getFirstName());
+				session.setUserLastName(loggedContact.getLastName());
+			}
+			else
+			{
+				// TODO: Return an error to the user
+				System.out.println("===> Error while getting the logged contact: " + loggedContactResponse.getStatus());				
+			}
+			
 		}
 		else
 		{
-			// Return an error to the user
+			// TODO: Return an error to the user
 			System.out.println("===> Error while getting the logged user: " + loggedUserResponse.getStatus());
-			return null;
 		}
+
+		// After obtaining the necessary information for the session, redirect to the initial user intended url
+		return new ModelAndView("redirect:" + httpRequest.getSession().getAttribute("initial_request"));
 		
 	}
 }

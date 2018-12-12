@@ -1,21 +1,20 @@
 package com.unlimitedcompanies.comsWeb.security.representations;
 
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.hateoas.ResourceSupport;
+
 @XmlRootElement(name = "user")
-public class User
+public class User extends ResourceSupport
 {	
 	private Integer userId;
 	private String username;
 	private char[] password;
+	private char[] passwordcheck;
 	private boolean enabled;
 	private String dateAdded;
 	private String lastAccess;
-	private Contact contact;
-	private List<Role> roles;
+	private Integer contactId;
 	
 	public User() {}
 
@@ -47,6 +46,16 @@ public class User
 	public void setPassword(char[] password)
 	{
 		this.password = password;
+	}
+	
+	public char[] getPasswordcheck()
+	{
+		return passwordcheck;
+	}
+
+	public void setPasswordcheck(char[] passwordcheck)
+	{
+		this.passwordcheck = passwordcheck;
 	}
 
 	public boolean getEnabled()
@@ -84,25 +93,14 @@ public class User
 		this.lastAccess = lastAccess;
 	}
 
-	public Contact getContact()
+	public Integer getContactId()
 	{
-		return contact;
+		return contactId;
 	}
 
-	public void setContact(Contact contact)
+	public void setContactId(Integer contactId)
 	{
-		this.contact = contact;
+		this.contactId = contactId;
 	}
-
-	@XmlElement(name = "role")
-	public List<Role> getRoles()
-	{
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles)
-	{
-		this.roles = roles;
-	}
-
+	
 }

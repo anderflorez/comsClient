@@ -37,7 +37,10 @@
 								<div class="dropdown-menu" aria-labelledby="actionMenu">
 									<a href="<c:url value='/contactManagement?cid=${contact.contactId}'/>" class="dropdown-item">Edit Contact</a>
 									<c:if test="${contactUser == null}">
-										<a href="<c:url value='/manageUser?c=${contact.contactId}'/>" class="dropdown-item">Create User</a>
+										<form method="GET" action="<c:url value='/userManagement'/>">
+											<input type="text" name="cid" value="${contact.contactId}" class="d-none">
+											<input type="submit" name="submit" value="Create User" class="dropdown-item">
+										</form>
 									</c:if>
 									<button type="button" class="dropdown-item" data-toggle="modal" data-target="#deleteContactConfirmation">
 										Delete

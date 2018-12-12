@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkManager;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkNotFoundException;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
+import com.unlimitedcompanies.comsWeb.security.representations.Contact;
 import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
 import com.unlimitedcompanies.comsWeb.security.representations.User;
 import com.unlimitedcompanies.comsWeb.security.representations.UserCollection;
@@ -86,7 +87,7 @@ public class UserDisplayController
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
-	public ModelAndView findContactDetails(@RequestParam("uid") Integer id)
+	public ModelAndView findUserDetails(@RequestParam("uid") Integer id)
 	{
 		ModelAndView mv = new ModelAndView("userDetails");
 		
@@ -101,8 +102,20 @@ public class UserDisplayController
 			if (response.getStatus() == HttpStatus.OK.value())
 			{
 				User user = response.readEntity(User.class);
-				mv.addObject("userForm", user);
 				mv.addObject("loggedUser", session.getLogedUserFullName());
+				mv.addObject("user", user);
+				
+				Response contactResponse = ClientBuilder.newClient()
+													 .target(links.getBaseLink("contact") + id)
+													 .request()
+													 .header("Authorization", "Bearer " + session.getToken())
+													 .get();
+				
+				if (contactResponse.getStatus() == HttpStatus.OK.value())
+				{
+					Contact contact = contactResponse.readEntity(Contact.class);
+					mv.addObject("contact", contact);
+				}
 			}
 			else
 			{

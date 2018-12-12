@@ -35,7 +35,7 @@
 									Actions
 								</a>
 								<div class="dropdown-menu" aria-labelledby="actionMenu">
-									<a href="<c:url value='/manageUser?u=${userForm.userId}'/>" class="dropdown-item">Edit User</a>
+									<a href="<c:url value='/userManagement?uid=${user.userId}'/>" class="dropdown-item">Edit User</a>
 									<button type="button" class="dropdown-item" data-toggle="modal" data-target="#deleteUserConfirmation">
 										Delete
 									</button>
@@ -48,7 +48,13 @@
 					</div>
 				</div>
 				
-				<form:form modelAttribute="userForm">
+				<form:form modelAttribute="user">
+ 					<div class="form-group row">
+						<label for="userContactName" class="col-12 col-md-3 col-lg-2 col-form-label"><strong>Name: </strong></label>
+						<div class="col-12 col-md-9 col-lg-10">
+							<input id="userContactName" value="${contact.firstName} ${contact.lastName}" readonly class="form-control-plaintext"/>
+						</div>
+					</div>
 					<div class="form-group row">
 						<label for="userUsername" class="col-12 col-md-3 col-lg-2 col-form-label"><strong>Username: </strong></label>
 						<div class="col-12 col-md-9 col-lg-10">
@@ -58,7 +64,7 @@
 					<div class="form-group row">
 						<label for="userStatus" class="col-12 col-md-3 col-lg-2 col-form-label"><strong>Status: </strong></label>
 						<div class="col-12 col-md-9 col-lg-10">
-							<form:input id="userStatus" path="enabled" readonly="true" class="form-control-plaintext"/>
+							<form:input id="userStatus" path="enabledStatus" readonly="true" class="form-control-plaintext"/>
 						</div>
 					</div>
 					<div class="form-group row">
@@ -73,7 +79,6 @@
 							<form:input id="userLastAccess" path="lastAccess" readonly="true" class="form-control-plaintext"/>
 						</div>
 					</div>
-
 					<form:input path="userId" class="d-none"/>
 				</form:form>
 			</div>			
@@ -117,7 +122,7 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 				<form method="POST" action="<c:url value='/deleteUser'/>">
-					<input type="text" name="userId" value="${userForm.userId}" class="d-none">
+					<input type="text" name="userId" value="${user.userId}" class="d-none">
 					<input type="submit" name="submit" value="Delete" class="btn btn-danger">
 				</form>
 			</div>
