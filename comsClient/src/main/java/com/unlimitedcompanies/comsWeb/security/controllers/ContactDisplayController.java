@@ -2,6 +2,7 @@ package com.unlimitedcompanies.comsWeb.security.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.ClientBuilder;
@@ -40,24 +41,37 @@ public class ContactDisplayController
 	{
 		ModelAndView mv = new ModelAndView("contactList");
 		
-		String url = "http://localhost:8080/comsws/rest/contacts";
+		String url = null;
+		try
+		{
+			url = links.getBaseLink("base_contact") + "s";
+		}
+		catch (LinkNotFoundException e)
+		{
+			mv.setViewName("redirect:/");
+			List<String> errorList = new ArrayList<>();
+			if (errors != null && !errors.isEmpty()) errorList.addAll(errors);
+			errorList.add("Error: The request to display a contact is invalid");
+			mv.addObject("errors", errorList);
+			
+			return mv;
+		}
+		
 		if (pag != null)
 		{
 			url += "?pag=" + pag;
 			if (epp != null) url += "&epp=" + epp;
 		}
 		
-		// TODO: Improve the address hard coding if possible
 		Response response = ClientBuilder.newClient()
-										 .target(url)
-										 .request()
-										 .header("Authorization", "Bearer " + session.getToken())
-										 .get();
+				.target(url)
+				.request()
+				.header("Authorization", "Bearer " + session.getToken())
+				.get();
 		
 		ContactCollection contactResponse = response.readEntity(ContactCollection.class);
 		
-		links.addBaseLink("contact", contactResponse.getLink("base_url").getHref());
-		
+		mv.addObject("loggedUser", session.getLogedUserFullName());
 		mv.addObject("contacts", contactResponse.getContacts());
 		
 		if (errors != null)
@@ -78,9 +92,8 @@ public class ContactDisplayController
 		if (contactResponse.getNextPage() != null)
 		{
 			mv.addObject("next", request.getContextPath() + "/contacts?pag=" + contactResponse.getNextPage());
-		}
+		}		
 		
-		mv.addObject("loggedUser", session.getLogedUserFullName());
 		return mv;
 	}
 	
@@ -92,7 +105,7 @@ public class ContactDisplayController
 		try
 		{
 			Response response = ClientBuilder.newClient()
-											 .target(links.getBaseLink("contact") + id)
+											 .target(links.getBaseLink("base_contact") + "/" + id)
 											 .request()
 											 .header("Authorization", "Bearer " + session.getToken())
 											 .get();

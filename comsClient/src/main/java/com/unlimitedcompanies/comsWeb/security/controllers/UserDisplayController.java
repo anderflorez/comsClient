@@ -41,7 +41,21 @@ public class UserDisplayController
 	{
 		ModelAndView mv = new ModelAndView("userList");
 		
-		String url = "http://localhost:8080/comsws/rest/users";
+		String url = null;
+		try
+		{
+			url = links.getBaseLink("base_user") + "s";
+		}
+		catch (LinkNotFoundException e)
+		{
+			mv.setViewName("redirect:/");
+			List<String> errorList = new ArrayList<>();
+			if (errors != null && !errors.isEmpty()) errorList.addAll(errors);
+			errorList.add("Error: The request to display a user is invalid");
+			mv.addObject("errors", errorList);
+			
+			return mv;
+		}
 		
 		if (pag != null)
 		{
@@ -57,8 +71,6 @@ public class UserDisplayController
 										 .get();
 		
 		UserCollection users = response.readEntity(UserCollection.class);
-		
-		links.addBaseLink("user", users.getLink("base_url").getHref());
 		
 		mv.addObject("users", users.getUsers());
 		
@@ -94,7 +106,7 @@ public class UserDisplayController
 		try
 		{
 			Response response = ClientBuilder.newClient()
-											 .target(links.getBaseLink("user") + id)
+											 .target(links.getBaseLink("base_user") + "/" + id)
 											 .request()
 											 .header("Authorization", "Bearer " + session.getToken())
 											 .get();
@@ -106,7 +118,7 @@ public class UserDisplayController
 				mv.addObject("user", user);
 				
 				Response contactResponse = ClientBuilder.newClient()
-													 .target(links.getBaseLink("contact") + id)
+													 .target(links.getBaseLink("base_contact") + "/" + user.getContactId())
 													 .request()
 													 .header("Authorization", "Bearer " + session.getToken())
 													 .get();

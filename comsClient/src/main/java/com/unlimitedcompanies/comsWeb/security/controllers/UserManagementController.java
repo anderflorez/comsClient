@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +52,11 @@ public class UserManagementController
 			// This is a request for the form to update an existing user
 			try
 			{
-				Response response = ClientBuilder.newClient().target(links.getBaseLink("user") + uid).request()
-						.header("Authorization", "Bearer " + session.getToken()).get();
+				Response response = ClientBuilder.newClient()
+										.target(links.getBaseLink("base_user") + "/" + uid)
+										.request()
+										.header("Authorization", "Bearer " + session.getToken())
+										.get();
 
 				if (response.getStatus() == HttpStatus.OK.value())
 				{
@@ -94,11 +95,11 @@ public class UserManagementController
 			
 			try
 			{
-				System.out.println("==========> Start request by getting a webtarget");
-				System.out.println("==========> using link: " + links.getBaseLink("user"));
-				WebTarget target = ClientBuilder.newClient().target(links.getBaseLink("user"));
-				Builder builder = target.request().header("Authorization", "Bearer " + session.getToken());
-				Response response = builder.post(Entity.json(user));
+				Response response = ClientBuilder.newClient()
+										.target(links.getBaseLink("base_user"))
+										.request()
+										.header("Authorization", "Bearer " + session.getToken())
+										.post(Entity.json(user));
 
 				
 				if (response.getStatus() == HttpStatus.CREATED.value())
@@ -108,7 +109,7 @@ public class UserManagementController
 					mv.addObject("user", createdUser);
 					
 					Response contactResponse = ClientBuilder.newClient()
-							 .target(links.getBaseLink("contact") + createdUser.getContactId())
+							 .target(links.getBaseLink("base_contact") + "/" + createdUser.getContactId())
 							 .request()
 							 .header("Authorization", "Bearer " + session.getToken())
 							 .get();
@@ -139,7 +140,7 @@ public class UserManagementController
 			try
 			{
 				Response response = ClientBuilder.newClient()
-						 .target(links.getBaseLink("contact"))
+						 .target(links.getBaseLink("base_user"))
 						 .request()
 						 .header("Authorization", "Bearer " + session.getToken())
 						 .put(Entity.json(user));
@@ -151,7 +152,7 @@ public class UserManagementController
 					mv.addObject("user", createdUser);
 					
 					Response contactResponse = ClientBuilder.newClient()
-							 .target(links.getBaseLink("contact") + createdUser.getContactId())
+							 .target(links.getBaseLink("base_contact") + "/" + createdUser.getContactId())
 							 .request()
 							 .header("Authorization", "Bearer " + session.getToken())
 							 .get();
@@ -176,6 +177,44 @@ public class UserManagementController
 		{
 			// This is a wrong request
 			// TODO: Send an error message back to the user with an http status code for bad request
+		}
+		
+		return mv;
+	}
+	
+	@RequestMapping(name = "/deleteUser", method = RequestMethod.POST)
+	public ModelAndView deleteUser(@RequestParam Integer userId)
+	{
+		ModelAndView mv = new ModelAndView("redirect:/users");
+		try
+		{
+			Response response = ClientBuilder.newClient()
+											 .target(links.getBaseLink("base_user") + "/" + userId)
+											 .request()
+											 .header("Authorization", "Bearer " + session.getToken())
+											 .delete();
+			
+			System.out.println("============> deleting user status: " + response.getStatus());
+			
+			if (response.getStatus() == HttpStatus.NO_CONTENT.value())
+			{
+				mv.addObject("success", "The user has been deleted successfully");				
+			}
+			else
+			{
+				ErrorMessages errors = response.readEntity(ErrorMessages.class);
+				mv.setViewName("redirect:/users");
+				mv.addObject("errors", errors.getErrors());
+			}
+			
+		} 
+		catch (LinkNotFoundException e)
+		{
+			mv.setViewName("redirect:/users");
+			List<String> errors = new ArrayList<>();
+			errors.add("An internal error has occurred, please try again or contact your system administrator");
+			mv.addObject("errors", errors);
+			return mv;
 		}
 		
 		return mv;

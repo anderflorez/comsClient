@@ -1,5 +1,6 @@
 package com.unlimitedcompanies.comsWeb.appManagement;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,14 +10,17 @@ import org.springframework.stereotype.Component;
 public class LinkManager
 {
 	private Map<String, String> baseLinks;
-	private Map<String, Map<Integer, String>> links;
 	
 	public LinkManager()
 	{
 		this.baseLinks = new HashMap<>();
-		this.links = new HashMap<>();
 	}
 	
+	public Map<String, String> getBaseLinks()
+	{
+		return Collections.unmodifiableMap(baseLinks);
+	}
+
 	public void addBaseLink(String key, String link)
 	{
 		this.baseLinks.put(key, link);
@@ -30,43 +34,5 @@ public class LinkManager
 			throw new LinkNotFoundException();
 		}
 		return link;
-	}
-	
-	public void addLink(String objectType, Integer objectId, String uri)
-	{
-		if (this.links.containsKey(objectType))
-		{
-			this.links.get(objectType).put(objectId, uri);
-		}
-		else
-		{
-			this.links.put(objectType, new HashMap<>());
-			this.links.get(objectType).put(objectId, uri);
-		}
-	}
-	
-	public String getLink(String objectType, Integer objectId) throws LinkNotFoundException
-	{
-		Map<Integer, String> link = this.links.get(objectType);
-		if (link != null && link.get(objectId) != null)
-		{
-			return link.get(objectId);
-		}
-		else
-		{
-			throw new LinkNotFoundException();
-		}
-	}
-	
-	public void clearObjectType(String objectType)
-	{
-		// TODO: test this method
-		
-		Map<Integer, String> tempMap;
-		tempMap = this.links.get(objectType);
-		if (!tempMap.isEmpty())
-		{
-			tempMap.clear();
-		}
 	}
 }

@@ -46,7 +46,7 @@ public class ContactManagementController
 			try
 			{
 				Response response = ClientBuilder.newClient()
-												 .target(links.getBaseLink("contact") + cId)
+												 .target(links.getBaseLink("base_contact") + "/" + cId)
 												 .request()
 												 .header("Authorization", "Bearer " + session.getToken())
 												 .get();
@@ -88,7 +88,7 @@ public class ContactManagementController
 			try
 			{
 				Response response = ClientBuilder.newClient()
-												 .target(links.getBaseLink("contact"))
+												 .target(links.getBaseLink("base_contact"))
 												 .request()
 												 .header("Authorization", "Bearer " + session.getToken())
 												 .post(Entity.json(contact));
@@ -122,7 +122,7 @@ public class ContactManagementController
 			try
 			{
 				Response response = ClientBuilder.newClient()
-												 .target(links.getBaseLink("contact"))
+												 .target(links.getBaseLink("base_contact"))
 												 .request()
 												 .header("Authorization", "Bearer " + session.getToken())
 												 .put(Entity.json(contact));
@@ -163,7 +163,7 @@ public class ContactManagementController
 		try
 		{
 			Response response = ClientBuilder.newClient()
-											 .target(links.getBaseLink("contact") + contactId)
+											 .target(links.getBaseLink("base_contact") + "/" + contactId)
 											 .request()
 											 .header("Authorization", "Bearer " + session.getToken())
 											 .delete();
