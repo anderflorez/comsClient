@@ -151,6 +151,11 @@
 	padding: 25px;
 }
 
+input,
+input:focus {
+	outline: none;
+}
+
 a {
 	color: #000000;
 }
