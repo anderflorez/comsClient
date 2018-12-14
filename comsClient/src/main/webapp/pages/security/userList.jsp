@@ -66,6 +66,19 @@
 	</c:forEach>
 </c:if>
 
+<c:if test="${messages != null}">
+	<c:forEach items="${messages}" var="message">
+		<div class="alert alert-warning alert-dismissible fade show"
+			role="alert">
+			${message}
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	</c:forEach>
+</c:if>
+
 <c:if test="${success != null}">
 	<div class="alert alert-success alert-dismissible fade show"
 		role="alert">

@@ -35,6 +35,7 @@ public class UserDisplayController
 	@RequestMapping(value = "/users")
 	public ModelAndView displayAllUsers(HttpServletRequest request,
 										@RequestParam(name = "errors", required = false) List<String> errors,
+										@RequestParam(name = "messages", required = false) List<String> messages,
 										@RequestParam(name = "success", required = false) String success,
 										@RequestParam(name = "pag", required = false) Integer pag,
 										@RequestParam(name = "epp", required = false) Integer epp)
@@ -77,6 +78,11 @@ public class UserDisplayController
 		if (errors != null)
 		{
 			mv.addObject("errors", errors);
+		}
+		
+		if (messages != null)
+		{
+			mv.addObject("messages", messages);
 		}
 		
 		if (success != null)

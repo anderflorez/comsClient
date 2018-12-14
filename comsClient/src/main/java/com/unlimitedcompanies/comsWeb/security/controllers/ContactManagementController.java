@@ -177,6 +177,7 @@ public class ContactManagementController
 				ErrorMessages errors = response.readEntity(ErrorMessages.class);
 				mv.setViewName("redirect:/contacts");
 				mv.addObject("errors", errors.getErrors());
+				mv.addObject("messages", errors.getMessages());
 			}
 			
 		} 

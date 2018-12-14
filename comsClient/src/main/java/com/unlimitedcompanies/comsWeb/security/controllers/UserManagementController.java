@@ -93,6 +93,15 @@ public class UserManagementController
 		{
 			// Make a request to create a new user
 			
+			if (!user.getPassword().equals(user.getPasswordcheck()))
+			{
+				List<String> errors = new ArrayList<>();
+				errors.add("Error: The passwords do not match");
+				mv.setViewName("redirect:/users");
+				mv.addObject("errors", errors);
+				return mv;
+			}
+			
 			try
 			{
 				Response response = ClientBuilder.newClient()
@@ -120,6 +129,14 @@ public class UserManagementController
 						mv.addObject("contact", contact);
 					}
 				}
+				else
+				{
+					// Received a status different than successful
+					ErrorMessages errors = response.readEntity(ErrorMessages.class);
+					mv.setViewName("redirect:/users");
+					mv.addObject("errors", errors.getErrors());
+					mv.addObject("messages", errors.getMessages());
+				}
 			}
 			catch (LinkNotFoundException e)
 			{
@@ -128,10 +145,6 @@ public class UserManagementController
 				errors.add("An internal error has occurred, please try again or contact your system administrator");
 				mv.addObject("errors", errors);
 				return mv;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
 			}
 		}
 		else if (user.getUserId() != null && user.getContactId() != null)
@@ -194,17 +207,27 @@ public class UserManagementController
 											 .header("Authorization", "Bearer " + session.getToken())
 											 .delete();
 			
-			System.out.println("============> deleting user status: " + response.getStatus());
-			
 			if (response.getStatus() == HttpStatus.NO_CONTENT.value())
 			{
 				mv.addObject("success", "The user has been deleted successfully");				
 			}
 			else
-			{
-				ErrorMessages errors = response.readEntity(ErrorMessages.class);
-				mv.setViewName("redirect:/users");
-				mv.addObject("errors", errors.getErrors());
+			{				
+				if (response.getHeaderString("comsAPI") != null)
+				{
+					ErrorMessages errors = response.readEntity(ErrorMessages.class);
+					mv.setViewName("redirect:/users");
+					mv.addObject("errors", errors.getErrors());
+					mv.addObject("messages", errors.getMessages());
+				}
+				else
+				{
+					List<String> errors = new ArrayList<>();
+					errors.add("Unknown error");
+					errors.add("Error code: " + response.getStatus());
+					mv.setViewName("redirect:/users");
+					mv.addObject("errors", errors);
+				}
 			}
 			
 		} 
