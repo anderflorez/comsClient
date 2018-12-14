@@ -2,7 +2,6 @@ package com.unlimitedcompanies.comsWeb.security.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -28,7 +28,7 @@ public class DashboardController
 	@Autowired
 	UserSessionManager session;
 	
-	@RequestMapping("/")
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView showDashboard(@RequestParam(name = "errors", required = false) List<String> errors)
 	{
 		ModelAndView mv = new ModelAndView("dashboard");
