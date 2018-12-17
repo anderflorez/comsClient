@@ -1,6 +1,7 @@
 package com.unlimitedcompanies.comsWeb.security.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.client.ClientBuilder;
@@ -93,59 +94,62 @@ public class UserManagementController
 		{
 			// Make a request to create a new user
 			
-			if (!user.getPassword().equals(user.getPasswordcheck()))
+			if (Arrays.equals(user.getPassword(), user.getPasswordcheck()))
+			{
+				try
+				{
+					Response response = ClientBuilder.newClient()
+							.target(links.getBaseLink("base_user"))
+							.request()
+							.header("Authorization", "Bearer " + session.getToken())
+							.post(Entity.json(user));
+					
+					
+					if (response.getStatus() == HttpStatus.CREATED.value())
+					{
+						User createdUser = response.readEntity(User.class);
+						mv.addObject("loggedUser", session.getLogedUserFullName());
+						mv.addObject("user", createdUser);
+						
+						Response contactResponse = ClientBuilder.newClient()
+								.target(links.getBaseLink("base_contact") + "/" + createdUser.getContactId())
+								.request()
+								.header("Authorization", "Bearer " + session.getToken())
+								.get();
+						
+						if (contactResponse.getStatus() == HttpStatus.OK.value())
+						{
+							Contact contact = contactResponse.readEntity(Contact.class);
+							mv.addObject("contact", contact);
+						}
+					}
+					else
+					{
+						// Received a status different than successful
+						ErrorMessages errors = response.readEntity(ErrorMessages.class);
+						mv.setViewName("redirect:/users");
+						mv.addObject("errors", errors.getErrors());
+						mv.addObject("messages", errors.getMessages());
+					}
+				}
+				catch (LinkNotFoundException e)
+				{
+					mv.setViewName("redirect:/contact?cid=" + user.getContactId());
+					List<String> errors = new ArrayList<>();
+					errors.add("An internal error has occurred, please try again or contact your system administrator");
+					mv.addObject("errors", errors);
+					return mv;
+				}
+			}
+			else
 			{
 				List<String> errors = new ArrayList<>();
 				errors.add("Error: The passwords do not match");
 				mv.setViewName("redirect:/users");
 				mv.addObject("errors", errors);
-				return mv;
+				return mv;				
 			}
 			
-			try
-			{
-				Response response = ClientBuilder.newClient()
-										.target(links.getBaseLink("base_user"))
-										.request()
-										.header("Authorization", "Bearer " + session.getToken())
-										.post(Entity.json(user));
-
-				
-				if (response.getStatus() == HttpStatus.CREATED.value())
-				{
-					User createdUser = response.readEntity(User.class);
-					mv.addObject("loggedUser", session.getLogedUserFullName());
-					mv.addObject("user", createdUser);
-					
-					Response contactResponse = ClientBuilder.newClient()
-							 .target(links.getBaseLink("base_contact") + "/" + createdUser.getContactId())
-							 .request()
-							 .header("Authorization", "Bearer " + session.getToken())
-							 .get();
-
-					if (contactResponse.getStatus() == HttpStatus.OK.value())
-					{
-						Contact contact = contactResponse.readEntity(Contact.class);
-						mv.addObject("contact", contact);
-					}
-				}
-				else
-				{
-					// Received a status different than successful
-					ErrorMessages errors = response.readEntity(ErrorMessages.class);
-					mv.setViewName("redirect:/users");
-					mv.addObject("errors", errors.getErrors());
-					mv.addObject("messages", errors.getMessages());
-				}
-			}
-			catch (LinkNotFoundException e)
-			{
-				mv.setViewName("redirect:/contact?cid=" + user.getContactId());
-				List<String> errors = new ArrayList<>();
-				errors.add("An internal error has occurred, please try again or contact your system administrator");
-				mv.addObject("errors", errors);
-				return mv;
-			}
 		}
 		else if (user.getUserId() != null && user.getContactId() != null)
 		{
