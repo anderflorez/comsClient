@@ -22,6 +22,7 @@ import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
 import com.unlimitedcompanies.comsWeb.security.representations.Contact;
 import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
 import com.unlimitedcompanies.comsWeb.security.representations.User;
+import com.unlimitedcompanies.comsWeb.security.representations.UserPassword;
 
 @Controller
 public class UserManagementController
@@ -66,10 +67,21 @@ public class UserManagementController
 				}
 				else
 				{
-					ErrorMessages errors = response.readEntity(ErrorMessages.class);
-					mv.setViewName("redirect:/users");
-					mv.addObject("errors", errors.getErrors());
-					mv.addObject("messages", errors.getMessages());
+					if (response.getHeaderString("comsAPI") != null)
+					{
+						ErrorMessages errors = response.readEntity(ErrorMessages.class);
+						mv.setViewName("redirect:/users");
+						mv.addObject("errors", errors.getErrors());
+						mv.addObject("messages", errors.getMessages());
+					}
+					else
+					{
+						List<String> errors = new ArrayList<>();
+						errors.add("Unknown error");
+						errors.add("Error code: " + response.getStatus());
+						mv.setViewName("redirect:/users");
+						mv.addObject("errors", errors);
+					}
 				}
 			}
 			catch (LinkNotFoundException e)
@@ -125,11 +137,21 @@ public class UserManagementController
 					}
 					else
 					{
-						// Received a status different than successful
-						ErrorMessages errors = response.readEntity(ErrorMessages.class);
-						mv.setViewName("redirect:/users");
-						mv.addObject("errors", errors.getErrors());
-						mv.addObject("messages", errors.getMessages());
+						if (response.getHeaderString("comsAPI") != null)
+						{
+							ErrorMessages errors = response.readEntity(ErrorMessages.class);
+							mv.setViewName("redirect:/users");
+							mv.addObject("errors", errors.getErrors());
+							mv.addObject("messages", errors.getMessages());
+						}
+						else
+						{
+							List<String> errors = new ArrayList<>();
+							errors.add("Unknown error");
+							errors.add("Error code: " + response.getStatus());
+							mv.setViewName("redirect:/users");
+							mv.addObject("errors", errors);
+						}
 					}
 				}
 				catch (LinkNotFoundException e)
@@ -179,6 +201,22 @@ public class UserManagementController
 						Contact contact = contactResponse.readEntity(Contact.class);
 						mv.addObject("contact", contact);
 					}
+					else
+					{				
+						if (response.getHeaderString("comsAPI") != null)
+						{
+							ErrorMessages errors = response.readEntity(ErrorMessages.class);
+							mv.addObject("errors", errors.getErrors());
+							mv.addObject("messages", errors.getMessages());
+						}
+						else
+						{
+							List<String> errors = new ArrayList<>();
+							errors.add("Unknown error");
+							errors.add("Error code: " + response.getStatus());
+							mv.addObject("errors", errors);
+						}
+					}
 				}
 			}
 			catch (LinkNotFoundException e)
@@ -199,6 +237,69 @@ public class UserManagementController
 		return mv;
 	}
 	
+	@RequestMapping(value = "/userPasswordChange", method = RequestMethod.POST)
+	public ModelAndView changeUserPassword(@RequestParam(name = "userId") int userId, 
+										   @RequestParam(name = "oldPassword") char[] oldPassword, 
+										   @RequestParam(name = "newPassword") char[] newPassword, 
+										   @RequestParam(name = "confirmPassword") char[] confirmPassword)
+	{
+		UserPassword userPassword = new UserPassword(userId, oldPassword, newPassword, confirmPassword);
+		
+		ModelAndView mv = new ModelAndView("redirect:/user");
+		mv.addObject("uid", userPassword.getUserId());
+		
+		System.out.println("=======> password: " + String.valueOf(userPassword.getNewPassword()));
+		System.out.println("=======> confirm: " + String.valueOf(userPassword.getConfirmPassword()));
+		
+		if (!String.valueOf(userPassword.getNewPassword()).equals(String.valueOf(userPassword.getConfirmPassword())))
+		{
+			List<String> errors = new ArrayList<>();
+			errors.add("The passwords do not match");
+			mv.addObject("errors", errors);
+			return mv;
+		}
+		
+		try
+		{
+			Response response = ClientBuilder.newClient()
+											 .target(links.getBaseLink("base_user") + "/password")
+											 .request()
+											 .header("Authorization", "Bearer " + session.getToken())
+											 .put(Entity.json(userPassword));
+			
+			if (response.getStatus() == HttpStatus.NO_CONTENT.value())
+			{
+				String success = "The user password has been changed successfully";
+				mv.addObject("success", success);
+			}
+			else
+			{				
+				if (response.getHeaderString("comsAPI") != null)
+				{
+					ErrorMessages errors = response.readEntity(ErrorMessages.class);
+					mv.addObject("errors", errors.getErrors());
+					mv.addObject("messages", errors.getMessages());
+				}
+				else
+				{
+					List<String> errors = new ArrayList<>();
+					errors.add("Unknown error");
+					errors.add("Error code: " + response.getStatus());
+					mv.addObject("errors", errors);
+				}
+			}
+		}
+		catch (LinkNotFoundException e)
+		{
+			List<String> errors = new ArrayList<>();
+			errors.add("An internal error has occurred, please try again or contact your system administrator");
+			mv.addObject("errors", errors);
+			return mv;
+		}
+		
+		return mv;
+	}
+	
 	@RequestMapping(name = "/deleteUser", method = RequestMethod.POST)
 	public ModelAndView deleteUser(@RequestParam Integer userId)
 	{
@@ -213,7 +314,7 @@ public class UserManagementController
 			
 			if (response.getStatus() == HttpStatus.NO_CONTENT.value())
 			{
-				mv.addObject("success", "The user has been deleted successfully");				
+				mv.addObject("success", "The user has been deleted successfully");
 			}
 			else
 			{				

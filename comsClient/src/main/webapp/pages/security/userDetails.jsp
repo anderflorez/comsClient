@@ -36,6 +36,9 @@
 								</a>
 								<div class="dropdown-menu" aria-labelledby="actionMenu">
 									<a href="<c:url value='/userManagement?uid=${user.userId}'/>" class="dropdown-item">Edit User</a>
+									<button type="button" class="dropdown-item" data-toggle="modal" data-target="#changeUserPassword">
+										Change Password
+									</button>
 									<button type="button" class="dropdown-item" data-toggle="modal" data-target="#deleteUserConfirmation">
 										Delete
 									</button>
@@ -106,7 +109,7 @@
 	</div>
 </c:if>
 
-<!-- Modal -->
+<!-- Modals -->
 <div class="modal fade" id="deleteUserConfirmation" tabindex="-1" role="dialog" aria-labelledby="deleteUserLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -124,6 +127,41 @@
 				<form method="POST" action="<c:url value='/deleteUser'/>">
 					<input type="text" name="userId" value="${user.userId}" class="d-none">
 					<input type="submit" name="submit" value="Delete" class="btn btn-danger">
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="changeUserPassword" tabindex="-1" role="dialog" aria-labelledby="changePasswordLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="changePasswordLabel">Change Password</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form method="POST" action="<c:url value='/userPasswordChange'/>">
+					<div class="form-group row">
+						<input type="text" name="userId" class="d-none" value="${userPassword.userId}">
+					</div>
+					<div class="form-group row">
+						<input type="password" name="oldPassword" class="form-control mx-3" value="${userPassword.oldPassword}" placeholder="Password">
+					</div>
+					<div class="form-group row">
+						<input type="password" name="newPassword" class="form-control mx-3" value="${userPassword.newPassword}" placeholder="New Password">
+					</div>
+					<div class="form-group row">
+						<input type="password" name="confirmPassword" class="form-control mx-3" value="${userPassword.confirmPassword}" placeholder="Confirm Password">
+					</div>
+					<div class="modal-footer">
+						<div class="form-group row">
+							<button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+							<input type="submit" name="submit" value="Submit" class="btn btn-success mr-2">
+						</div>					
+					</div>
 				</form>
 			</div>
 		</div>

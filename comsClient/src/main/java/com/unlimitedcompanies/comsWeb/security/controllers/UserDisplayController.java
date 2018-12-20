@@ -22,6 +22,7 @@ import com.unlimitedcompanies.comsWeb.security.representations.Contact;
 import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
 import com.unlimitedcompanies.comsWeb.security.representations.User;
 import com.unlimitedcompanies.comsWeb.security.representations.UserCollection;
+import com.unlimitedcompanies.comsWeb.security.representations.UserPassword;
 
 @Controller
 public class UserDisplayController
@@ -105,9 +106,16 @@ public class UserDisplayController
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
-	public ModelAndView findUserDetails(@RequestParam("uid") Integer id)
+	public ModelAndView findUserDetails(@RequestParam(name = "uid") Integer id, 
+										@RequestParam(name = "errors", required = false) List<String> errors,
+										@RequestParam(name = "success", required = false) String success)
 	{
 		ModelAndView mv = new ModelAndView("userDetails");
+		
+		if (errors == null)
+		{
+			errors = new ArrayList<>();
+		}
 		
 		try
 		{
@@ -120,8 +128,8 @@ public class UserDisplayController
 			if (response.getStatus() == HttpStatus.OK.value())
 			{
 				User user = response.readEntity(User.class);
-				mv.addObject("loggedUser", session.getLogedUserFullName());
 				mv.addObject("user", user);
+				mv.addObject("success", success);
 				
 				Response contactResponse = ClientBuilder.newClient()
 													 .target(links.getBaseLink("base_contact") + "/" + user.getContactId())
@@ -133,25 +141,39 @@ public class UserDisplayController
 				{
 					Contact contact = contactResponse.readEntity(Contact.class);
 					mv.addObject("contact", contact);
+					UserPassword userPassword = new UserPassword();
+					userPassword.setUserId(user.getUserId());
+					mv.addObject("userPassword", userPassword);
 				}
 			}
 			else
 			{
-				ErrorMessages error = response.readEntity(ErrorMessages.class);
-				mv.setViewName("redirect:/users");
-				mv.addObject("errors", error.getErrors());
-				mv.addObject("messages", error.getMessages());
+				if (response.getHeaderString("comsAPI") != null)
+				{
+					ErrorMessages errorList = response.readEntity(ErrorMessages.class);
+					mv.setViewName("redirect:/users");
+					errors.addAll(errorList.getErrors());
+					mv.addObject("messages", errorList.getMessages());
+				}
+				else
+				{
+					List<String> errorList = new ArrayList<>();
+					errorList.add("Unknown error");
+					errorList.add("Error code: " + response.getStatus());
+					errors.addAll(errorList);
+				}
 			}
 		} 
 		catch (LinkNotFoundException e)
 		{
 			mv.setViewName("redirect:/users");
-			List<String> errors = new ArrayList<>();
-			errors.add("Error: The request to display a user is invalid");
-			mv.addObject("errors", errors);
+			List<String> errorList = new ArrayList<>();
+			errorList.add("Error: The request to display a user is invalid");
+			errors.addAll(errorList);
 		}
 		
+		mv.addObject("loggedUser", session.getLogedUserFullName());
+		mv.addObject("errors", errors);
 		return mv;
-
 	}
 }
