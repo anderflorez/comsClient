@@ -3,13 +3,13 @@
 
 <!DOCTYPE html>
 <html>
-<c:import url="../dashboard/head.jsp"/>
+<c:import url="/pages/navigation/head.jsp"/>
 <body>
 	
-<c:import url="../dashboard/sidebar.jsp" />
+<c:import url="/pages/navigation/sidebar.jsp" />
 
 <div class="page-container">
-	<c:import url="../dashboard/header.jsp" />
+	<c:import url="/pages/navigation/header.jsp" />
 
 	<!-- Styles -->
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/securityManagement.css'/>">
@@ -57,25 +57,42 @@
 
 <c:if test="${errors != null}">
 	<c:forEach items="${errors}" var="error">
-		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		<div class="alert alert-danger alert-dismissible fade show"
+			role="alert">
 			${error}
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
-		</div>	
+		</div>
+	</c:forEach>
+</c:if>
+
+<c:if test="${messages != null}">
+	<c:forEach items="${messages}" var="message">
+		<div class="alert alert-warning alert-dismissible fade show"
+			role="alert">
+			${message}
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
 	</c:forEach>
 </c:if>
 
 <c:if test="${success != null}">
-	<div class="alert alert-success alert-dismissible fade show" role="alert">
+	<div class="alert alert-success alert-dismissible fade show"
+		role="alert">
 		${success}
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<button type="button" class="close" data-dismiss="alert"
+			aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
 </c:if>
 
-<c:import url="../dashboard/scriptDefinitions.jsp"/>
+<c:import url="/pages/navigation/scriptDefinitions.jsp"/>
 
 <!-- Scripts -->
 <script src="<c:url value='/js/securityManagement.js'/>" type="text/javascript" charset="utf-8" async defer></script>

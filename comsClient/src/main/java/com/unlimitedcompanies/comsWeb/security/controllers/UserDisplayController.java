@@ -65,7 +65,6 @@ public class UserDisplayController
 			if (epp != null) url += "&epp=" + epp;
 		}
 		
-		// TODO: Improve the address hard coding if possible
 		Response response = ClientBuilder.newClient()
 										 .target(url)
 										 .request()

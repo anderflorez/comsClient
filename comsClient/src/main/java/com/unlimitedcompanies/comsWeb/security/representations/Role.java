@@ -1,6 +1,35 @@
 package com.unlimitedcompanies.comsWeb.security.representations;
 
-public class Role
-{
+import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.hateoas.ResourceSupport;
+
+@XmlRootElement(name = "contact")
+public class Role extends ResourceSupport
+{
+	private Integer roleId;
+	private String roleName;
+
+	public Role() {}
+
+	public Integer getRoleId()
+	{
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId)
+	{
+		this.roleId = roleId;
+	}
+
+	public String getRoleName()
+	{
+		return roleName;
+	}
+
+	public void setRoleName(String roleName)
+	{
+		this.roleName = roleName;
+	}
+	
 }
