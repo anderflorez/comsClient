@@ -3,15 +3,15 @@
 
 <!DOCTYPE html>
 <html>
-<c:import url="../dashboard/head.jsp"/>
+<c:import url="/pages/navigation/head.jsp"/>
 <body>
 	
-<c:import url="../dashboard/sidebar.jsp" />
+<c:import url="/pages/navigation/sidebar.jsp" />
 
 <div class="page-container">
 	<!-- Styles -->
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/securityManagement.css'/>">
-	<c:import url="../dashboard/header.jsp" />
+	<c:import url="/pages/navigation/header.jsp" />
 
 	
 	<div class="page-content">
@@ -93,7 +93,7 @@
 	</div>	
 </div>
 
-<c:import url="../dashboard/scriptDefinitions.jsp"/>
+<c:import url="/pages/navigation/scriptDefinitions.jsp"/>
 
 <c:if test="${errors != null}">
 	<c:forEach items="${errors}" var="error">

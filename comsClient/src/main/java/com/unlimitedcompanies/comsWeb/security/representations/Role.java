@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.hateoas.ResourceSupport;
 
-@XmlRootElement(name = "contact")
+@XmlRootElement(name = "role")
 public class Role extends ResourceSupport
 {
 	private Integer roleId;

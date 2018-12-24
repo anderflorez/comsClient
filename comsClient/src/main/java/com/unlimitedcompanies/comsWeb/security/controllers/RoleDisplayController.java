@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,6 +19,7 @@ import com.unlimitedcompanies.comsWeb.appManagement.LinkManager;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkNotFoundException;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
 import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
+import com.unlimitedcompanies.comsWeb.security.representations.Role;
 import com.unlimitedcompanies.comsWeb.security.representations.RoleCollectionResponse;
 
 @Controller
@@ -107,6 +109,64 @@ public class RoleDisplayController
 		
 		mv.addObject("loggedUser", session.getLogedUserFullName());
 		
+		return mv;
+	}
+	
+	@RequestMapping(value = "/role", method = RequestMethod.GET)
+	public ModelAndView searchUserDetails(@RequestParam(name = "rid") Integer id,
+										  @RequestParam(name = "errors", required = false) List<String> errors,
+										  @RequestParam(name = "success", required = false) String success)
+	{
+		ModelAndView mv = new ModelAndView("roleDetails");
+		
+		if (errors == null)
+		{
+			errors = new ArrayList<>();
+		}
+		
+		try
+		{
+			Response response = ClientBuilder.newClient()
+											 .target(links.getBaseLink("base_role") + "/" + id)
+											 .request()
+											 .header("Authorization", "Bearer " + session.getToken())
+											 .get();
+			
+			if (response.getStatus() == HttpStatus.OK.value())
+			{
+				Role roleResponse = response.readEntity(Role.class);
+				mv.addObject("role", roleResponse);
+				
+				if (success != null) mv.addObject("success", success);
+			}
+			else
+			{
+				if (response.getHeaderString("comsAPI") != null)
+				{
+					ErrorMessages errorList = response.readEntity(ErrorMessages.class);
+					mv.setViewName("redirect:/roles");
+					errors.addAll(errorList.getErrors());
+					mv.addObject("messages", errorList.getMessages());
+				}
+				else
+				{
+					List<String> errorList = new ArrayList<>();
+					errorList.add("Unknown error");
+					errorList.add("Error code: " + response.getStatus());
+					errors.addAll(errorList);
+				}
+			}
+		}
+		catch (LinkNotFoundException e)
+		{
+			mv.setViewName("redirect:/roles");
+			List<String> errorList = new ArrayList<>();
+			errorList.add("Error: The request to display a user is invalid");
+			errors.addAll(errorList);
+		}
+		
+		mv.addObject("loggedUser", session.getLogedUserFullName());
+		mv.addObject("errors", errors);
 		return mv;
 	}
 }

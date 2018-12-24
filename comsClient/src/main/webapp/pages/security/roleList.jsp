@@ -42,7 +42,7 @@
 							</thead>
 							<tbody>
 								<c:forEach items="${roles}" var="role">
-									<tr class="clickable" data-href="<c:url value='/roleDetail?r=${role.roleId}'/>">
+									<tr class="clickable" data-href="<c:url value='/role?rid=${role.roleId}'/>">
 										<td>${role.roleName}</td>
 									</tr>
 								</c:forEach>
