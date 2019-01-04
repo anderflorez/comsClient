@@ -7,7 +7,7 @@
 				<img src="<c:url value='/images/UEC BULB-64x64.png'/>"/>
 			</div>
 			<div id="sidebar-head-text">
-				<h5>App Name</h5>
+				<h5>Coms</h5>
 			</div>
 		</a>
 		<div id="menu-close">

@@ -34,6 +34,7 @@ public class DashboardController
 		ModelAndView mv = new ModelAndView("dashboard");
 		mv.addObject("loggedUser", session.getLogedUserFullName());
 		
+		// TODO: try to move the next request process to the interceptor or an earlier point to remove the address hard coding here		
 		Response response = ClientBuilder.newClient()
 								.target("http://localhost:8080/comsws/rest/directory")
 								.request()
@@ -48,6 +49,7 @@ public class DashboardController
 			{
 				links.addBaseLink(next.getResourceName(), next.getResourceBaseURL());
 			}
+			
 			if (errors != null && !errors.isEmpty())
 			{
 				mv.addObject("errors", errors);

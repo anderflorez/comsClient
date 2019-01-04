@@ -248,6 +248,7 @@ public class UserManagementController
 		ModelAndView mv = new ModelAndView("redirect:/user");
 		mv.addObject("uid", userPassword.getUserId());
 		
+		// TODO: Remove the next printing lines
 		System.out.println("=======> password: " + String.valueOf(userPassword.getNewPassword()));
 		System.out.println("=======> confirm: " + String.valueOf(userPassword.getConfirmPassword()));
 		

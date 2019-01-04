@@ -58,6 +58,7 @@ public class ContactManagementController
 				}
 				else
 				{
+					// TODO: Change this to cover all the options - provider server known errors and unknown errors with http status - see user and role management classes
 					ErrorMessages errors = response.readEntity(ErrorMessages.class);
 					mv.setViewName("redirect:/contacts");
 					mv.addObject("errors", errors.getErrors());
@@ -101,6 +102,7 @@ public class ContactManagementController
 				}
 				else 
 				{
+					// TODO: Change this to cover all the options - provider server known errors and unknown errors with http status - see user and role management classes
 					ErrorMessages errors = response.readEntity(ErrorMessages.class);
 					mv.setViewName("contactForm");
 					mv.addObject("errors", errors.getErrors());
@@ -135,6 +137,7 @@ public class ContactManagementController
 				}
 				else 
 				{
+					// TODO: Change this to cover all the options - provider server known errors and unknown errors with http status - see user and role management classes
 					ErrorMessages errors = response.readEntity(ErrorMessages.class);
 					mv.setViewName("contactForm");
 					mv.addObject("contact", contact);
@@ -174,6 +177,7 @@ public class ContactManagementController
 			}
 			else
 			{
+				// TODO: Change this to cover all the options - provider server known errors and unknown errors with http status - see user and role management classes
 				ErrorMessages errors = response.readEntity(ErrorMessages.class);
 				mv.setViewName("redirect:/contacts");
 				mv.addObject("errors", errors.getErrors());

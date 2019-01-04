@@ -26,7 +26,7 @@
 			<div class="jumbotron">
 				<div id="newRole" class="row mb15">
 					<div class="col-12">
-						<button type="button" class="float-right btn btn-sm btn-outline-success clickable" data-href="<c:url value='/manageRole'/>">
+						<button type="button" class="float-right btn btn-sm btn-outline-success clickable" data-href="<c:url value='/roleManagement'/>">
 							New Role
 						</button>
 					</div>

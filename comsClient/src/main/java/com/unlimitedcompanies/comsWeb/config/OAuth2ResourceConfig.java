@@ -30,7 +30,7 @@ public class OAuth2ResourceConfig
 		details.setAccessTokenUri("http://localhost:8080/comsws/oauth/token");
 		details.setClientSecret("somesecret");
 		details.setGrantType("authorization_code");
-		details.setPreEstablishedRedirectUri("http://localhost:8080/coms/contacts");
+		details.setPreEstablishedRedirectUri("http://localhost:8080/coms/tokenmanager");
 		details.setScope(scopes);
 		
 		return details;

@@ -21,6 +21,7 @@ import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
 import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
 import com.unlimitedcompanies.comsWeb.security.representations.Role;
 import com.unlimitedcompanies.comsWeb.security.representations.RoleCollectionResponse;
+import com.unlimitedcompanies.comsWeb.security.representations.UserDetailedCollection;
 
 @Controller
 public class RoleDisplayController
@@ -126,25 +127,55 @@ public class RoleDisplayController
 		
 		try
 		{
-			Response response = ClientBuilder.newClient()
+			Response roleResponse = ClientBuilder.newClient()
 											 .target(links.getBaseLink("base_role") + "/" + id)
 											 .request()
 											 .header("Authorization", "Bearer " + session.getToken())
 											 .get();
 			
-			if (response.getStatus() == HttpStatus.OK.value())
+			if (roleResponse.getStatus() == HttpStatus.OK.value())
 			{
-				Role roleResponse = response.readEntity(Role.class);
-				mv.addObject("role", roleResponse);
+				Role roleResult = roleResponse.readEntity(Role.class);
+				mv.addObject("role", roleResult);
 				
 				if (success != null) mv.addObject("success", success);
+				
+				// Request a list of user members of the role
+				Response roleMembersResponse = ClientBuilder.newClient()
+												 .target(roleResult.getLink("role_members").getHref())
+												 .request()
+												 .header("Authorization", "Bearer " + session.getToken())
+												 .get();
+				
+				if (roleMembersResponse.getStatus() == HttpStatus.OK.value())
+				{
+					UserDetailedCollection members = roleMembersResponse.readEntity(UserDetailedCollection.class);
+					mv.addObject("members", members.getUsers());
+					
+					// TODO: Fix the hard coded url strings					
+					mv.addObject("role_removemember", "http://localhost:8080/coms/removeRoleMember");
+					mv.addObject("role_addmember", "http://localhost:8080/coms/addRoleMember");
+				}
+				
+				//Request a list of users non-members of the role
+				Response roleNonMembersResponse = ClientBuilder.newClient()
+													 .target(roleResult.getLink("role_nonMembers").getHref())
+													 .request()
+													 .header("Authorization", "Bearer " + session.getToken())
+													 .get();
+				
+				if (roleNonMembersResponse.getStatus() == HttpStatus.OK.value())
+				{
+					UserDetailedCollection nonMembers = roleNonMembersResponse.readEntity(UserDetailedCollection.class);
+					mv.addObject("nonMembers", nonMembers.getUsers());
+				}
 			}
 			else
 			{
-				if (response.getHeaderString("comsAPI") != null)
+				mv.setViewName("redirect:/roles");
+				if (roleResponse.getHeaderString("comsAPI") != null)
 				{
-					ErrorMessages errorList = response.readEntity(ErrorMessages.class);
-					mv.setViewName("redirect:/roles");
+					ErrorMessages errorList = roleResponse.readEntity(ErrorMessages.class);
 					errors.addAll(errorList.getErrors());
 					mv.addObject("messages", errorList.getMessages());
 				}
@@ -152,7 +183,7 @@ public class RoleDisplayController
 				{
 					List<String> errorList = new ArrayList<>();
 					errorList.add("Unknown error");
-					errorList.add("Error code: " + response.getStatus());
+					errorList.add("Error code: " + roleResponse.getStatus());
 					errors.addAll(errorList);
 				}
 			}
