@@ -114,7 +114,7 @@ public class RoleDisplayController
 	}
 	
 	@RequestMapping(value = "/role", method = RequestMethod.GET)
-	public ModelAndView searchUserDetails(@RequestParam(name = "rid") Integer id,
+	public ModelAndView searchRoleDetails(@RequestParam(name = "rid") Integer id,
 										  @RequestParam(name = "errors", required = false) List<String> errors,
 										  @RequestParam(name = "success", required = false) String success)
 	{

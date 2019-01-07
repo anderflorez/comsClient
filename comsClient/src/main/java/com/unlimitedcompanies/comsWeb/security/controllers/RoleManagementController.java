@@ -145,10 +145,10 @@ public class RoleManagementController
 			try
 			{
 				Response response = ClientBuilder.newClient()
-						 .target(links.getBaseLink("base_role"))
-						 .request()
-						 .header("Authorization", "Bearer " + session.getToken())
-						 .put(Entity.json(role));
+											 .target(links.getBaseLink("base_role"))
+											 .request()
+											 .header("Authorization", "Bearer " + session.getToken())
+											 .put(Entity.json(role));
 				
 				if (response.getStatus() == HttpStatus.OK.value())
 				{
@@ -237,37 +237,103 @@ public class RoleManagementController
 	public ModelAndView removeRoleMembers(@RequestParam int roleId,
 										  @RequestParam(required = false) Integer[] userId)
 	{
-		System.out.println("=========> RoleId received: " + roleId);
+		ModelAndView mv = new ModelAndView("redirect:/role");
+		mv.addObject("rid", roleId);
+		
 		if (userId != null)
 		{
-			// TODO: Remove the users received from the role members
-			
-			for (int i = 0; i < userId.length; i++)
+			try
 			{
-				System.out.println("==========> User ID found - index: " + i + " - id: " + userId[i]);
-			} 
+				Response removeMemberResponse = ClientBuilder.newClient()
+												 .target(links.getBaseLink("base_role") + "/" + roleId + "/nonmembers")
+												 .request()
+												 .header("Authorization", "Bearer " + session.getToken())
+												 .put(Entity.json(userId));
+				
+				if (removeMemberResponse.getStatus() == HttpStatus.NO_CONTENT.value())
+				{
+					mv.addObject("success", "The members have been successfully removed from the role");
+				}
+				else
+				{
+					if (removeMemberResponse.getHeaderString("comsAPI") != null)
+					{
+						ErrorMessages errors = removeMemberResponse.readEntity(ErrorMessages.class);
+						mv.setViewName("redirect:/roles");
+						mv.addObject("errors", errors.getErrors());
+						mv.addObject("messages", errors.getMessages());
+					}
+					else
+					{
+						List<String> errors = new ArrayList<>();
+						errors.add("Unknown error");
+						errors.add("Error code: " + removeMemberResponse.getStatus());
+						mv.setViewName("redirect:/roles");
+						mv.addObject("errors", errors);
+					}
+				}
+			}
+			catch (LinkNotFoundException e)
+			{
+				mv.setViewName("redirect:/roles");
+				List<String> errors = new ArrayList<>();
+				errors.add("Error: The request to remove a member from the role is invalid, please try again");
+				mv.addObject("errors", errors);
+			}
 		}
 		
-		// TODO: Redirect the user to the role details
-		return null;
+		return mv;
 	}
 	
 	@RequestMapping(value = "/addRoleMember", method = RequestMethod.POST)
 	public ModelAndView addRoleMembers(@RequestParam int roleId,
 									   @RequestParam(required = false) Integer[] userId)
 	{
-		System.out.println("=========> RoleId received: " + roleId);
+		ModelAndView mv = new ModelAndView("redirect:/role");
+		mv.addObject("rid", roleId);
+		
 		if (userId != null)
 		{
-			// TODO: Add the users received to the role members
-			
-			for (int i = 0; i < userId.length; i++)
+			try
 			{
-				System.out.println("==========> User ID found - index: " + i + " - id: " + userId[i]);
-			} 
+				Response addMemberResponse = ClientBuilder.newClient()
+												 .target(links.getBaseLink("base_role") + "/" + roleId + "/members")
+												 .request()
+												 .header("Authorization", "Bearer " + session.getToken())
+												 .put(Entity.json(userId));
+				
+				if (addMemberResponse.getStatus() == HttpStatus.NO_CONTENT.value())
+				{
+					mv.addObject("success", "The users have been successfully added to the role");
+				}
+				else
+				{
+					if (addMemberResponse.getHeaderString("comsAPI") != null)
+					{
+						ErrorMessages errors = addMemberResponse.readEntity(ErrorMessages.class);
+						mv.setViewName("redirect:/roles");
+						mv.addObject("errors", errors.getErrors());
+						mv.addObject("messages", errors.getMessages());
+					}
+					else
+					{
+						List<String> errors = new ArrayList<>();
+						errors.add("Unknown error");
+						errors.add("Error code: " + addMemberResponse.getStatus());
+						mv.setViewName("redirect:/roles");
+						mv.addObject("errors", errors);
+					}
+				}
+			}
+			catch (LinkNotFoundException e)
+			{
+				mv.setViewName("redirect:/roles");
+				List<String> errors = new ArrayList<>();
+				errors.add("Error: The request to add a user to the role is invalid, please try again");
+				mv.addObject("errors", errors);
+			}
 		}
 		
-		// TODO: Redirect the user to the role details
-		return null;
+		return mv;
 	}
 }
