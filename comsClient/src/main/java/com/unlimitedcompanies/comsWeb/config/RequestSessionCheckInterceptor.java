@@ -63,6 +63,5 @@ public class RequestSessionCheckInterceptor extends HandlerInterceptorAdapter
 		{
 			return true;
 		}
-		
 	}
 }
