@@ -98,7 +98,7 @@ public class SessionAndTokenManager
 			else
 			{
 				// TODO: Return an error to the user
-				System.out.println("===> Error while getting the logged contact: " + loggedContactResponse.getStatus());				
+				System.out.println("===> Error while getting the logged contact: " + loggedContactResponse.getStatus());
 			}
 			
 		}
