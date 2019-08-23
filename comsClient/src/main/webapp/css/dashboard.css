@@ -5,12 +5,12 @@
 	bottom: 0;
 	left: 0;
 	width: 280px;
-	background: #303030;
+	background: #303040;
 }
 
 #sidebar a {
 	display: block;
-	color: #FFFFFF;
+	color: #F0F0F0;
 	text-decoration: none;
 }
 
@@ -21,7 +21,8 @@
 
 #sidebar-head {
 	height: 70px;
-	border-bottom: 1px solid #404040;
+	background-color: #49505A;
+	border-bottom: 1px solid #303040;
 }
 
 #sidebar-head a {
@@ -61,16 +62,18 @@
 	bottom: inherit;
 	width: inherit;
 	overflow: auto;
+	padding-top: 30px;
 }
 
 #sidebar-menu a {
-	color: #C0C0C0;
-	padding: 12px;
+    margin: 0 20px;
+    padding: 8px;
+    border-radius: 5px;
 }
 
 #sidebar-menu a:hover {
-	background-color: #505050;
-	color: #FFFFFF;
+	background-color: #49505A;
+	color: #F0F0F0;
 }
 
 #sidebar-menu ul {
@@ -78,20 +81,10 @@
 	padding: 0;
 }
 
-.menu-icon {
-	padding: 0 15px;
-	font-size: 20px;
-}
 
-.page-container {
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 280px;
-	right: 0;
-	overflow-y: auto;
-	background-color: #D0D0D0;
-}
+
+
+
 
 #header {
 	position: fixed;
@@ -100,8 +93,14 @@
 	left: inherit;
 	z-index: 10;
 	height: 70px;
-	background-color: #FFFFFF;
-	border-bottom: 1px solid #E8E8E8;
+	background-color: #303040;
+	border-bottom: 1px solid #303040;
+}
+
+#header a,
+#header i {
+	background-color: transparent;
+	color: #F0F0F0;
 }
 
 #header button {
@@ -132,15 +131,32 @@
 	margin-right: 20px;
 }
 
+#nav-right button, #user-menu {
+	color: #F0F0F0;
+}
+
+#header .dropdown-menu a, #header .dropdown-menu i {
+	color: #343A40;
+}
+
+.menu-icon {
+	padding: 0 15px;
+	font-size: 20px;
+}
+
+.page-container {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 280px;
+	right: 0;
+	overflow-y: auto;
+	background-color: #EEEEEE;
+}
+
 .page-content {
 	position: absolute;
 	top: 80px;
-	left: 10px;
-	right: 10px;
-	margin-bottom: 10px;
-	padding: 25px;
-	border-radius: 5px;
-	background-color: #FFFFFF;
 }
 
 .page-content > div {
@@ -154,14 +170,6 @@
 input,
 input:focus {
 	outline: none;
-}
-
-a {
-	color: #000000;
-}
-
-a:hover {
-	color: #000000;
 }
 
 .dropdown > a.dropdown-toggle {
@@ -212,5 +220,4 @@ a:hover {
 	.page-content > div {
 		padding: 15px;
 	}
-
 }

@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsWeb.security.representations;
+package com.unlimitedcompanies.comsWeb.representations.security;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,29 +8,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.unlimitedcompanies.comsWeb.appManagement.ResponseFacade;
 
-@XmlRootElement(name = "contacts")
-public class ContactCollection extends ResponseFacade
-{	
-	@XmlElement(name = "contact")
-	private List<Contact> contact;
+@XmlRootElement(name = "users")
+public class UserCollection extends ResponseFacade
+{
+	List<User> users;
 	private Integer prevPage;
 	private Integer nextPage;
-
-	public ContactCollection() 
+	
+	public UserCollection()
 	{
-		this.contact = new ArrayList<>();
+		this.users = new ArrayList<>();
 		this.prevPage = null;
 		this.nextPage = null;
 	}
 
-	public List<Contact> getContacts()
+	@XmlElement(name = "user")
+	public List<User> getUsers()
 	{
-		return contact;
+		return users;
 	}
 
-	public void setContacts(List<Contact> contacts)
+	public void setUsers(List<User> users)
 	{
-		this.contact = contacts;
+		this.users = users;
 	}
 
 	public Integer getPrevPage()

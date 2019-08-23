@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsWeb.security.controllers;
+package com.unlimitedcompanies.comsWeb.controllers.security;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkManager;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkNotFoundException;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
-import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
-import com.unlimitedcompanies.comsWeb.security.representations.Role;
+import com.unlimitedcompanies.comsWeb.representations.security.ErrorMessages;
+import com.unlimitedcompanies.comsWeb.representations.security.Role;
 
 @Controller
 public class RoleManagementController

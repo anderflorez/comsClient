@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsWeb.security.controllers;
+package com.unlimitedcompanies.comsWeb.controllers.security;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -24,8 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
-import com.unlimitedcompanies.comsWeb.security.representations.Contact;
-import com.unlimitedcompanies.comsWeb.security.representations.User;
+import com.unlimitedcompanies.comsWeb.representations.security.Contact;
+import com.unlimitedcompanies.comsWeb.representations.security.User;
 
 @Controller
 public class SessionAndTokenManager

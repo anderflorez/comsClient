@@ -45,6 +45,7 @@ $(document).ready(function() {
 			$("#sidebar-head-logo").find("img").css("padding", "15px");
 			$("#sidebar").css("width", "280px");
 			$("#nav-right").css("display", "inline-flex");
+			$(".menu-icon").css("padding", "0 2px");
 		}
 		else if (side === 1) {
 			$("#sidebar").animate({left: 0}, speed);
@@ -56,6 +57,7 @@ $(document).ready(function() {
 			$("#sidebar").animate({width: "80px"}, speed);
 			$(".page-container").animate({left: "80px"}, speed);
 			$("#nav-right").css("display", "inline-flex");
+			$(".menu-icon").css("padding", "0 2px");
 		}
 		else {
 			$("#sidebar").css("left", "-280px");
@@ -67,6 +69,7 @@ $(document).ready(function() {
 			$("#nav-menu").find("button").hide();
 			$("#sidebar").animate({left: '0'}, speed);
 			$(".page-container").animate({left: '280'}, speed);
+			$(".menu-icon").css("padding", "0 15px");
 
 			if ($(window).width() < 492) {
 				$("#nav-right").css("display", "none");

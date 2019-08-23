@@ -57,7 +57,7 @@ public class ClientWebConfiguration implements WebMvcConfigurer
 	{
 		UrlBasedViewResolver resolver = new UrlBasedViewResolver();
 		resolver.setViewClass(JstlView.class);
-		resolver.setPrefix("/pages/security/");
+		resolver.setPrefix("/pages/");
 		resolver.setSuffix(".jsp");
 		resolver.setOrder(2);
 		return resolver;

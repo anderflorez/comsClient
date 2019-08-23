@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsWeb.security.controllers;
+package com.unlimitedcompanies.comsWeb.controllers.security;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,10 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkManager;
 import com.unlimitedcompanies.comsWeb.appManagement.LinkNotFoundException;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
-import com.unlimitedcompanies.comsWeb.security.representations.Contact;
-import com.unlimitedcompanies.comsWeb.security.representations.ErrorMessages;
-import com.unlimitedcompanies.comsWeb.security.representations.User;
-import com.unlimitedcompanies.comsWeb.security.representations.UserPassword;
+import com.unlimitedcompanies.comsWeb.representations.security.Contact;
+import com.unlimitedcompanies.comsWeb.representations.security.ErrorMessages;
+import com.unlimitedcompanies.comsWeb.representations.security.User;
+import com.unlimitedcompanies.comsWeb.representations.security.UserPassword;
 
 @Controller
 public class UserManagementController

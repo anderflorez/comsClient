@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsWeb.security.representations;
+package com.unlimitedcompanies.comsWeb.representations.security;
 
 import java.util.ArrayList;
 import java.util.Collections;

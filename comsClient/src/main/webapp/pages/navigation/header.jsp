@@ -17,7 +17,7 @@
 			<div class="dropdown-menu" aria-labelledby="user-menu">
 				<a href="#" class="dropdown-item"><i class="ti-settings"></i>Settings</a>
 				<a href="#" class="dropdown-item"><i class="ti-user"></i>Profile</a>
-				<a href="<c:url value='/contacts'/>" class="dropdown-item"><i class="fas fa-users-cog"></i>Management</a>
+				<a href="<c:url value='/policies'/>" class="dropdown-item"><i class="fas fa-users-cog"></i>Management</a>
 				<div class="dropdown-divider"></div>
 				<a href="http://localhost:8080/comsws/logout" class="dropdown-item"><i class="ti-power-off"></i>Logout</a>
 			</div>

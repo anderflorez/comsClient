@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsWeb.security.controllers;
+package com.unlimitedcompanies.comsWeb.controllers.security;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.unlimitedcompanies.comsWeb.appManagement.LinkManager;
 import com.unlimitedcompanies.comsWeb.appManagement.UserSessionManager;
-import com.unlimitedcompanies.comsWeb.security.representations.ResourceLink;
-import com.unlimitedcompanies.comsWeb.security.representations.ResourceLinkCollection;
+import com.unlimitedcompanies.comsWeb.representations.security.ResourceLink;
+import com.unlimitedcompanies.comsWeb.representations.security.ResourceLinkCollection;
 
 @Controller
 public class DashboardController
@@ -31,7 +31,7 @@ public class DashboardController
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView showDashboard(@RequestParam(name = "errors", required = false) List<String> errors)
 	{
-		ModelAndView mv = new ModelAndView("dashboard");
+		ModelAndView mv = new ModelAndView("security/dashboard");
 		mv.addObject("loggedUser", session.getLogedUserFullName());
 		
 		// TODO: try to move the next request process to the interceptor or an earlier point to remove the address hard coding here		

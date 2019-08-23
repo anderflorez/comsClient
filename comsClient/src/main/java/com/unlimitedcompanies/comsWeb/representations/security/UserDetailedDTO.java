@@ -1,22 +1,27 @@
-package com.unlimitedcompanies.comsWeb.security.representations;
+package com.unlimitedcompanies.comsWeb.representations.security;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.hateoas.ResourceSupport;
 
-@XmlRootElement(name = "user")
-public class User extends ResourceSupport
-{	
+@XmlRootElement(name = "userDetailed")
+public class UserDetailedDTO extends ResourceSupport
+{
 	private Integer userId;
 	private String username;
-	private char[] password;
-	private char[] passwordcheck;
 	private boolean enabled;
 	private String dateAdded;
 	private String lastAccess;
 	private Integer contactId;
+	private String firstName;
+	private String middleName;
+	private String lastName;
+	private String email;
 	
-	public User() {}
+	public UserDetailedDTO() 
+	{
+		this.enabled = false;
+	}
 
 	public Integer getUserId()
 	{
@@ -38,34 +43,9 @@ public class User extends ResourceSupport
 		this.username = username;
 	}
 
-	public char[] getPassword()
-	{
-		return password;
-	}
-
-	public void setPassword(char[] password)
-	{
-		this.password = password;
-	}
-	
-	public char[] getPasswordcheck()
-	{
-		return passwordcheck;
-	}
-
-	public void setPasswordcheck(char[] passwordcheck)
-	{
-		this.passwordcheck = passwordcheck;
-	}
-
-	public boolean getEnabled()
+	public boolean isEnabled()
 	{
 		return enabled;
-	}
-	
-	public String getEnabledStatus()
-	{
-		return this.enabled ? "Active" : "Inactive";
 	}
 
 	public void setEnabled(boolean enabled)
@@ -102,5 +82,45 @@ public class User extends ResourceSupport
 	{
 		this.contactId = contactId;
 	}
-	
+
+	public String getFirstName()
+	{
+		return firstName;
+	}
+
+	public void setFirstName(String firstName)
+	{
+		this.firstName = firstName;
+	}
+
+	public String getMiddleName()
+	{
+		return middleName;
+	}
+
+	public void setMiddleName(String middleName)
+	{
+		this.middleName = middleName;
+	}
+
+	public String getLastName()
+	{
+		return lastName;
+	}
+
+	public void setLastName(String lastName)
+	{
+		this.lastName = lastName;
+	}
+
+	public String getEmail()
+	{
+		return email;
+	}
+
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+
 }

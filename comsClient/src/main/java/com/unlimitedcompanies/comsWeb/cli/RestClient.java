@@ -12,8 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.unlimitedcompanies.comsWeb.security.representations.Contact;
-import com.unlimitedcompanies.comsWeb.security.representations.ContactCollection;
+import com.unlimitedcompanies.comsWeb.representations.security.Contact;
+import com.unlimitedcompanies.comsWeb.representations.security.ContactCollection;
 
 public class RestClient
 {

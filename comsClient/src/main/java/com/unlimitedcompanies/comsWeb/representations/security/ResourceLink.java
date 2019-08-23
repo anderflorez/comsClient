@@ -1,4 +1,4 @@
-package com.unlimitedcompanies.comsWeb.security.representations;
+package com.unlimitedcompanies.comsWeb.representations.security;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
